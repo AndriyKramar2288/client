@@ -7,15 +7,21 @@ const CHANGE_WHO_WE_ARE_TIMEOUT = 5000
 const WHO_WHE_ARE_STATES = [
     {
         message: "гаранти якості та комфорту",
-        details: "Ми ріл гаранти, не ржіть. попа попа попа попа попа попа попа попа попа попа попа попа попа попа попа попа попа попа попа попа попа попа попа попа",
+        details: "Наше обслуговування - завдаток статусу та престижності. Наш відвідувач не шукатиме прихисток в очікуванні сеансу. Наш відвідувач - актор вишуканості, свідок аристократизму нової доби.",
         photo: "/images/2025-04-09_20.19.38.png",
         background: "/images/2025-04-09_20.19.55.png"
     },
     {
-        message: "немощі",
-        details: "Ага",
-        photo: "https://www.w3resource.com/w3r_images/javascript-fundamental-image-exercise-180.svg",
-        background: "/images/2025-04-09_20.35.47.png"
+        message: "кращі в регіоні",
+        details: "Посеред усіх навколишніх земель, наш заклад гордо забезпечує культурну винятковість, во істину, унікального села.",
+        photo: "/images/2025-04-09_20.27.11.png",
+        background: "/images/2025-01-03_18.31.46.png"
+    },
+    {
+        message: "провідники в архів епох та мозаїк часу",
+        details: "Так як ми не купуємо ліцензії на фільми, у нас ви зустрінете все: індусів, бойовики 90-х, останні піратські новинки.",
+        photo: "https://i.ytimg.com/vi/_ktd1usuRBA/mqdefault.jpg",
+        background: "/images/2025-04-09_20.20.09.png"
     }
 ]
 
@@ -59,7 +65,7 @@ function AnimatedBlock({current_state}) {
                                 exit={{ opacity: 0, x: 100, transition: { duration: 0.25 } }}
                                 key={current_state.photo}
                         >
-                        <img src={current_state.photo} alt="fuck" className="rounded-md shadow-black shadow-xl max-h-[20lvw]" />
+                        <img src={current_state.photo} alt="fuck" className="rounded-md shadow-black shadow-xl h-[20lvw]" />
                     </motion.div>
                 </motion.div>
             </AnimatePresence>
