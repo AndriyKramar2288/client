@@ -7,7 +7,7 @@ const RIGHTS_IS_UNDER_DEFENCE = "© ВСІ ПРАВА ЗАХИЩЕНО ©"
 const ITEMS_DATA = [
     {
         first: "Адреса",
-        last: "Minecraft Java Edition 1.16.5, UAPolit, м. Великая Точка, сел. Беззаперечна_^, при в'їзді - перша дорога наліво"
+        last: "Minecraft Java Edition, UAPolit, м. Великая Точка, сел. Беззаперечна_^, при в'їзді - перша дорога наліво"
     },
     {
         first: "Електронна скринька",

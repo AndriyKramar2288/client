@@ -1,3 +1,7 @@
+"use client"
+
+import { AnimatePresence, motion } from "framer-motion"
+
 const films_data = [
     {
         id: 1,
@@ -31,25 +35,51 @@ const films_data = [
     }
 ]
 
-export default function MovieCard({ film }) {
+export default function MovieCard({ film, hide_details_other_card, extanded, visible, card_index }) {
+    function toggleExtanded() {
+        hide_details_other_card(card_index)
+    }
+
     return (
-        <div className="flex text-amber-100 my-4">
-            <div className="bg-[#585858d3]">
-                <img src={film.src_poster} alt="poster" className="max-h-[70lvh] m-4 shadow-xl rounded-md shadow-black" />
-            </div>
-            <div style={{ fontFamily: "var(--font-cormorant)" }} className="flex flex-col bg-[#38383862]">
-                <h1 className="m-3 text-3xl">{film.uk_name}</h1>
-                <h1 className="text-xl mx-3 my-0.5 italic text-amber-200">{film.en_name}</h1>
-                <div className="flex mx-3 my-0.5 items-center">
-                    <h1 className="font-bold text-2xl">{film.age_limit}</h1>
-                    {film.genres.map((genre, index) => <h1 key={index} className="font-bold text-xl ml-2">{`${genre.toLowerCase()}${index !== film.genres.length-1 ? "," : ""}`}</h1>)}
+        <AnimatePresence mode="wait">
+        {visible && (
+            <motion.div 
+                initial={{ opacity: 0, width: 0 }}
+                animate={{ opacity: 1, width: extanded ? "100%" : "50%", transition: { duration: 0.7 } }}
+                exit={{ opacity: 0, width: 0, transition: { duration: 0.7 } }}
+                className="flex text-amber-100 my-4 overflow-x-hidden"
+                key={card_index}>
+                <div onClick={(e) => toggleExtanded()} className="bg-[#585858d3] flex justify-center items-center cursor-pointer duration-300 hover:bg-amber-700">
+                    <motion.img 
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1, transition: { duration: 0.5, delay: 0.15 } }}
+                        exit={{ opacity: 0, transition: { duration: 0.1 } }} 
+                        src={film.src_poster} alt="poster" className="max-h-[70lvh] m-4 shadow-xl rounded-md shadow-black" />
                 </div>
-                <h1 className="text-xl mx-3 my-0.5 text-amber-200">{film.release_year}</h1>
-                <div className="flex items-center mx-3">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/6/69/IMDB_Logo_2016.svg" className="max-h-5" />
-                    <h1 className="text-xl mx-3 my-1 text-amber-200">{film.rating.imdb}</h1>
+                <div style={{ fontFamily: "var(--font-cormorant)" }} className="flex flex-col bg-[#38383862]">
+                    <h1 className="m-3 text-3xl">{film.uk_name}</h1>
+                    <h1 className="text-xl mx-3 my-0.5 italic text-amber-200">{film.en_name}</h1>
+                    <div className="flex mx-3 my-0.5 items-center">
+                        <h1 className="font-bold text-2xl">{film.age_limit}</h1>
+                        {film.genres.map((genre, index) => <h1 key={index} className="font-bold text-xl ml-2">{`${genre.toLowerCase()}${index !== film.genres.length-1 ? "," : ""}`}</h1>)}
+                    </div>
+                    <h1 className="text-xl mx-3 my-0.5 text-amber-200">{film.release_year}</h1>
+                    <div className="flex items-center mx-3">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/6/69/IMDB_Logo_2016.svg" className="max-h-5" />
+                        <h1 className="text-xl mx-3 my-1 text-amber-200">{film.rating.imdb}</h1>
+                    </div>
                 </div>
-            </div>
-        </div>
+                {extanded && (
+                    <motion.div
+                        className="bg-[#7070705e] p-3"
+                        initial={{ opacity: 0, x: -100 }}
+                        animate={{ opacity: 1, x: 0, transition: { duration: 0.75, delay: 0.25 } }}
+                        exit={{ opacity: 0, x: 100, transition: { duration: 0.25 } }}>
+                        TEXT
+                    </motion.div>
+                )}
+            </motion.div>
+        )}
+        </AnimatePresence>
     )
 }
