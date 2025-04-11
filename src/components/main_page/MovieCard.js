@@ -1,44 +1,91 @@
 "use client"
 
 import { AnimatePresence, motion } from "framer-motion"
+import { useEffect, useState } from "react"
 
-const films_data = [
-    {
-        id: 1,
-        uk_name: "Полювання",
-        en_name: "The Hunt",
-        release_year: 2012,
-        countries: ["Данія", "Швеція"],
-        genres: ["Фільми", "Драми"],
-        director: "Томас Вінтерберґ",
-        src_poster: "https://uakino.me/uploads/posts/2018-02/1517680168_1.jpg",
-        src_photos: [
-            "https://uakino.me/uploads/posts/2017-10/TheHunt/5dbjyrbe.jpg",
-            "https://uakino.me/uploads/posts/2017-10/TheHunt/42p0j1zh.jpg",
-            "https://uakino.me/uploads/posts/2017-10/TheHunt/p12y2pkx.jpg"
-        ],
-        actors: [
-            "Мадс Міккельсен", 
-            "Томас Бо Ларсен",
-            "Анніка Веддеркопп",
-            "Ласе Фоґельстрьом",
-            "Сусе Волд",
-            "Анне Луізе Гасінґ"
-        ],
-        duration: 1488,
-        voice_acting: "Український (Цікава Ідея)",
-        rating: {
-            imdb: "8.3/328 000"
-        },
-        age_limit: "12+",
-        about: "Психологічний фільм «Полювання», знятий данцем Томасом Вінтербергом, розповідає історію вигнанця і показує, як людське безумство може бути заразним. Люди звикли вірити натовпу, і не реагують на докази та каяття. Все, що намагається сказати у відповідь вигнанець, сприймається як спроба виправдати себе. Ця вузьколобість людей руйнує долі невинних, що виявилися жертвами дивних, непередбачуваних обставин. У крихітному данському селі живе сорокарічний Лукас. Після розлучення і боротьби за сина підлітка, який вирішив залишитися з ним, він пішов з ліцею і став вихователем в дитсадку. Привабливий Лукас не обділений увагою: у нього навіть закохується його вихованка - п'ятирічна дівчинка Клара. Одного разу дівчинка намагається його поцілувати, і Лукас не стримуючи себе грубить дівчинці. «Покинута» Клара придумує і здійснює блискучий план помсти вихователю. На те, що доводиться пережити Лукасу, емоційно дивитися важко. І навіть після визнання його невинності в суді, суспільство продовжує жорстоке полювання на вигнанця ..."
-    }
-]
+const PHOTOS_INTERVAL_VALUE = 5000
+
+const ACTORS_H1 = "Актори"
+const DESCRIPTION_H1 = "Опис"
+const IMDB_SVG_SRC = "https://upload.wikimedia.org/wikipedia/commons/6/69/IMDB_Logo_2016.svg"
+
+function DetailsListItem({first, last, icon_class}) {
+    return (
+        <li className="flex items-center mb-3">
+            <i className={`mr-2 text-xs ${icon_class}`}></i>
+            <span className="font-extrabold mr-2">{first}:</span>
+            {last}
+        </li>
+    )
+}
+
+function FilmDetails({ film, currentPhoto }) {
+    return (
+        <motion.div
+            className="bg-cover bg-center rounded-2xl ml-4"
+            initial={{ opacity: 0, x: -100 }}
+            animate={{ opacity: 1, x: 0, transition: { duration: 0.75, delay: 0.25 } }}
+            exit={{ opacity: 0, x: 100, transition: { duration: 0.25 } }}
+            style={{ fontFamily: "var(--font-pt-mono)", backgroundImage: `url(${film.src_photos[currentPhoto]})` }}>
+
+            <motion.div className="backdrop-sepia-50 h-full flex p-4 rounded-2xl"
+                        key={currentPhoto}
+                        initial={{ backdropFilter: "blur(100px)" }}
+                        animate={{ backdropFilter: "blur(4px)", transition: { duration: 0.7, ease: "easeOut" } }}
+                        exit={{ backdropFilter: "blur(100px)", transition: { duration: 0.1, ease: "easeIn" } }}>
+                <div className="flex flex-col p-3">
+                    <ul className="bg-[#00000088] p-5 rounded-lg">
+                        <DetailsListItem first={"Режисер"} last={film.director} icon_class={"fa-solid fa-user-tie"} />
+                        <DetailsListItem first={"Тривалість"} last={`${film.duration} хв`} icon_class={"fa-solid fa-film"} />
+                        <DetailsListItem first={"Країни"} last={film.countries.join(", ")} icon_class={"fa-solid fa-font-awesome"} />
+                        <DetailsListItem first={"Дубляж"} last={film.voice_acting} icon_class={"fa-solid fa-quote-right"} />
+                    </ul>
+
+                    <h1 className="mt-4 font-bold text-center">{ACTORS_H1}</h1>
+                    <ul className="bg-[#00000088] p-3 rounded-lg mt-2 text-sm">
+                        {film.actors.map((actor, index) => (
+                            <li className="mt-1" key={index}>
+                                <i className="fa-regular fa-circle mr-2 text-xs"></i>
+                                {actor}
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+                <div>
+                    <h1 className="mt-4 font-bold text-center">{DESCRIPTION_H1}</h1>
+                    <p className="max-w-[30vw] text-xs bg-[#00000088] p-5 rounded-lg mt-3">{film.about}</p>
+                </div>
+            </motion.div>
+        </motion.div>
+    )
+}
+
+
+
+
 
 export default function MovieCard({ film, hide_details_other_card, extanded, visible, card_index }) {
     function toggleExtanded() {
         hide_details_other_card(card_index)
     }
+
+    const [photosIntr, setPhotosIntr] = useState()
+    const [currentPhoto, setCurrentPhoto] = useState(0)
+
+    useEffect(() => {
+        if (extanded) {
+            setPhotosIntr(setInterval(() => {
+                setCurrentPhoto(prev => prev + 1 === film.src_photos.length ? 0 : prev + 1)
+            }, PHOTOS_INTERVAL_VALUE))
+
+            return () => {
+                clearInterval(photosIntr)
+            }
+        }
+        else {
+            clearInterval(photosIntr)
+        }
+    }, [extanded])
 
     return (
         <AnimatePresence mode="wait">
@@ -47,16 +94,17 @@ export default function MovieCard({ film, hide_details_other_card, extanded, vis
                 initial={{ opacity: 0, width: 0 }}
                 animate={{ opacity: 1, width: extanded ? "100%" : "50%", transition: { duration: 0.7 } }}
                 exit={{ opacity: 0, width: 0, transition: { duration: 0.7 } }}
-                className="flex text-amber-100 my-4 overflow-x-hidden"
+                className="flex text-amber-100 my-4 overflow-hidden h-[75lvh]"
                 key={card_index}>
-                <div onClick={(e) => toggleExtanded()} className="bg-[#585858d3] flex justify-center items-center cursor-pointer duration-300 hover:bg-amber-700">
-                    <motion.img 
+                <div onClick={(e) => toggleExtanded()} className="bg-[#585858d3] rounded-tl-2xl flex justify-center items-center cursor-pointer duration-300 hover:bg-amber-700">
+                    <motion.img
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1, transition: { duration: 0.5, delay: 0.15 } }}
-                        exit={{ opacity: 0, transition: { duration: 0.1 } }} 
-                        src={film.src_poster} alt="poster" className="max-h-[70lvh] m-4 shadow-xl rounded-md shadow-black" />
+                        exit={{ opacity: 0, transition: { duration: 0.5 } }}
+                        key={film.src_poster}
+                        src={film.src_poster} alt="poster" className="shadow-xl shadow-black max-h-[70lvh] rounded-md mx-2.5" />
                 </div>
-                <div style={{ fontFamily: "var(--font-cormorant)" }} className="flex flex-col bg-[#38383862]">
+                <div style={{ fontFamily: "var(--font-cormorant)" }} className="flex flex-col bg-[#38383862] rounded-br-2xl">
                     <h1 className="m-3 text-3xl">{film.uk_name}</h1>
                     <h1 className="text-xl mx-3 my-0.5 italic text-amber-200">{film.en_name}</h1>
                     <div className="flex mx-3 my-0.5 items-center">
@@ -65,18 +113,12 @@ export default function MovieCard({ film, hide_details_other_card, extanded, vis
                     </div>
                     <h1 className="text-xl mx-3 my-0.5 text-amber-200">{film.release_year}</h1>
                     <div className="flex items-center mx-3">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/6/69/IMDB_Logo_2016.svg" className="max-h-5" />
+                        <img src={IMDB_SVG_SRC} className="max-h-5" />
                         <h1 className="text-xl mx-3 my-1 text-amber-200">{film.rating.imdb}</h1>
                     </div>
                 </div>
                 {extanded && (
-                    <motion.div
-                        className="bg-[#7070705e] p-3"
-                        initial={{ opacity: 0, x: -100 }}
-                        animate={{ opacity: 1, x: 0, transition: { duration: 0.75, delay: 0.25 } }}
-                        exit={{ opacity: 0, x: 100, transition: { duration: 0.25 } }}>
-                        TEXT
-                    </motion.div>
+                    <FilmDetails currentPhoto={currentPhoto} film={film} />
                 )}
             </motion.div>
         )}
