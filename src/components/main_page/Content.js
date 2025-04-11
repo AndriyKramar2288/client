@@ -1,6 +1,7 @@
 "use client"
 
 import { useMainContext } from "../contexts/MainContext";
+import AboutUs from "./AboutUs";
 import MovieList from "./MovieList";
 
 const films_data = [
@@ -134,6 +135,7 @@ export default function Content() {
         <main className="bg-[url(/images/2025-04-09_20.25.22.png)] bg-cover bg-center bg-fixed">
             <div className="backdrop-blur-xs backdrop-grayscale-100">
                 <MovieList list={films_data} />
+                <AboutUs />
             </div>
         </main>
     )

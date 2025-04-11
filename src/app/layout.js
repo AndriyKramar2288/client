@@ -1,6 +1,7 @@
-import { Geist, Geist_Mono, Dancing_Script, Big_Shoulders_Inline_Text, Courier_Prime, Cormorant_Garamond, PT_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Dancing_Script, Big_Shoulders_Inline_Text, Courier_Prime, Cormorant_Garamond, PT_Mono, Great_Vibes } from "next/font/google";
 import "./globals.css";
 import Footer from "@/components/common/Footer";
+import { MainContextProvider } from "@/components/contexts/MainContext";
 
 
 const geistSans = Geist({
@@ -18,6 +19,7 @@ const courier = Courier_Prime({ variable: "--font-courier", subsets: ["latin"], 
 const big_shoulders = Big_Shoulders_Inline_Text({ variable: "--font-big-shoulders", subsets: ["latin"], weight: "700" })
 const garadmont = Cormorant_Garamond({ variable: "--font-cormorant", weight: "700", subsets: ["latin", "cyrillic"] })
 const pt_mono = PT_Mono({variable: "--font-pt-mono", subsets: ["latin", "cyrillic"], weight: "400"})
+const greate_vibes = Great_Vibes({ variable: "--font-greate-vibes", subsets: ["cyrillic", "latin"], weight:"400" })
 
 export const metadata = {
   title: "Беззаперечне Полотно",
@@ -28,10 +30,12 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${dancing.variable} ${big_shoulders.variable} ${courier.variable} ${garadmont.variable} ${pt_mono.variable}`}
+        className={`${greate_vibes.variable} ${geistSans.variable} ${geistMono.variable} ${dancing.variable} ${big_shoulders.variable} ${courier.variable} ${garadmont.variable} ${pt_mono.variable}`}
       >
-        {children}
-        <Footer />
+        <MainContextProvider>
+          {children}
+          <Footer />
+        </MainContextProvider>
       </body>
     </html>
   );

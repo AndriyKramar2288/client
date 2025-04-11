@@ -26,7 +26,7 @@ function HeaderButton({ iconClass, text, clickHandler }) {
 
 function HeaderSign({ text }) {
     return (
-        <h1 className="text-2xl bg-amber-600 p-4 mx-3.5 group-hover:mx-0 hover:bg-orange-600 rounded-4xl duration-700 font-(family-name:--font-pt-mono) text-amber-200">
+        <h1 className="text-2xl bg-amber-600 p-4 mx-3.5 group-hover:mx-0 hover:bg-orange-600 rounded-xl duration-700 font-(family-name:--font-pt-mono) text-amber-200">
             {text}
         </h1>
     )

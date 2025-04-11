@@ -1,5 +1,3 @@
-import Image from "next/image"
-
 const films_data = [
     {
         id: 1,
