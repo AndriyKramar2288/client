@@ -1,7 +1,7 @@
 "use client"
 
+import { useRouter } from "next/navigation"
 import { useMainContext } from "../contexts/MainContext"
-import { motion } from "framer-motion"
 
 function HeaderButtonDecoration() {
     return (
@@ -13,7 +13,7 @@ function HeaderButton({ iconClass, text, clickHandler }) {
     return (
         <div className="group flex items-center">
             <HeaderButtonDecoration />
-            <button className="text-2xl bg-amber-700 p-4 mx-3.5 group-hover:mx-0 hover:bg-amber-800 duration-300 font-(family-name:--font-pt-mono) text-amber-200"
+            <button className="text-2xl bg-amber-700 p-4 cursor-pointer mx-3.5 group-hover:mx-0 hover:bg-amber-800 duration-300 font-(family-name:--font-pt-mono) text-amber-200"
                     onClick={clickHandler}
             >
                 <i className={`${iconClass} mr-3`}></i>
@@ -32,14 +32,16 @@ function HeaderSign({ text }) {
     )
 }
 
-export default function Header() {
-    const {user} = useMainContext();
+export default function Header({ headText }) {
+    const {user} = useMainContext()
+    const route = useRouter()
+
     return (
         <header className="">
             <nav className="flex bg-amber-600 justify-around">
-                <HeaderButton iconClass={"fa-regular fa-compass"} text={"Головна"} />
+                <HeaderButton iconClass={"fa-regular fa-compass"} text={"Головна"} clickHandler={() => route.push("/")} />
                 {/* {user && <HeaderButton iconClass={"fa-regular fa-calendar"} text={"Заброньовані сеанси"} />} */}
-                <HeaderSign text={"Зараз у прокаті"} />
+                <HeaderSign text={headText} />
                 <HeaderButton iconClass={"fa-regular fa-user"} text={"Увійти"} />
             </nav>
         </header>

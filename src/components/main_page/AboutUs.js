@@ -21,7 +21,7 @@ const WHO_WHE_ARE_STATES = [
         message: "провідники в архів епох та мозаїк часу",
         details: "Так як ми не купуємо ліцензії на фільми, у нас ви зустрінете все: індусів, бойовики 90-х, останні піратські новинки.",
         photo: "https://i.ytimg.com/vi/_ktd1usuRBA/mqdefault.jpg",
-        background: "/images/2025-04-09_20.20.09.png"
+        background: "/images/2025-04-09_20.20.50.png"
     }
 ]
 
@@ -83,6 +83,7 @@ export default function AboutUs() {
         }, CHANGE_WHO_WE_ARE_TIMEOUT))
         return () => {
             clearInterval(intr)
+            setIntr(null)
         }
     }, [])
 
