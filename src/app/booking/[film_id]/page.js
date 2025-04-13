@@ -6,6 +6,7 @@ import { AnimatePresence, motion } from "framer-motion"
 import FilmSmallCard from "@/components/booking_page/FilmSmallCard";
 import SessionList from "@/components/booking_page/SessionList";
 import CinemaHall from "@/components/booking_page/CinemaHall";
+import ViewerDataInput from "@/components/booking_page/ViewerDataInput";
 
 const BOOKING_A_MOVIE = "Бронювання квитка"
 
@@ -48,8 +49,10 @@ const BOOKING_SESSIONS = [
     film_id: 6,
     date: "2025-04-10T14:30:00Z",
     format: "2D",
+    price_per_sit: 200,
     hall_data: {
       hall_id: 13141,
+      hall_name: "Головна зала",
       occupiedPlaces: [
         {
           booking_id: 13141,
@@ -67,8 +70,10 @@ const BOOKING_SESSIONS = [
     film_id: 6,
     date: "2025-04-11T14:30:00Z",
     format: "2D",
+    price_per_sit: 100,
     hall_data: {
       hall_id: 13141,
+      hall_name: "Головна зала",
       occupiedPlaces: [
         {
           booking_id: 13141,
@@ -84,16 +89,34 @@ const BOOKING_SESSIONS = [
 ]
 
 function NavigationPanelElement({ text, myLevel, currentLevel, setCurrentLevel, success, available }) {
+  function getStateClasses() {
+    if (!available) {
+      return "bg-gray-600"
+    }
+    else if (myLevel === currentLevel) {
+      return "bg-gray-300"
+    }
+    else if (success) {
+      return "bg-green-700 hover:bg-green-800 cursor-pointer"
+    }
+    else {
+      return "bg-red-800 hover:bg-red-900 cursor-pointer"
+    }
+  }
+
   return (
     <motion.button
       onClick={available ? () => setCurrentLevel(myLevel) : () => {}} 
-      className={`${available ? "bg-amber-100 cursor-pointer" : "bg-gray-600"}
-                  ${myLevel === currentLevel && "bg-gray-100"}
-                  ${success && "bg-green-600"}
-                  text-black duration-300 mx-2 rounded-md text-xl font-bold text-center flex-1/3`}
+      className={`${getStateClasses()} text-white duration-300 mx-2 rounded-md text-xl font-bold text-center flex-1/3`}
       style={{ fontFamily: "var(--font-pt-mono)" }}>
       {text}
     </motion.button>
+  )
+}
+
+function NavigationPanelArrow() {
+  return (
+    <i className="fa-solid fa-angles-right text-white"></i>
   )
 }
 
@@ -104,14 +127,20 @@ export default function Home() {
   const [ currentLevel, setCurrentLevel ] = useState(1)
 
   const [ choosedSession, setChoosedSession ] = useState()
-  const [ choosedSit, setChoosedSit ] = useState()
-  const [ choosedViewerData, setChoosedViewerData ] = useState()
+  const [ choosedSits, setChoosedSits ] = useState([])
+  const [ choosedViewerData, setChoosedViewerData ] = useState({})
 
   useEffect(() => {
-    if (choosedSession || choosedSit || choosedViewerData) {
-      setCurrentLevel(prev => prev === 3 ? 0 : prev + 1)
+    if (choosedSession) {
+      setChoosedSits(prev => [])
+      setChoosedViewerData(prev => ({}))
+      setCurrentLevel(prev => prev + 1)
     }
-  }, [choosedSession, choosedSit, choosedViewerData])
+  }, [choosedSession])
+
+  useEffect(() => {
+    console.log(choosedViewerData)
+  }, [choosedViewerData])
 
   return (
     <div className="bg-center bg-cover bg-fixed" style={{ backgroundImage: `url(${BG_URL})` }}>
@@ -124,10 +153,12 @@ export default function Home() {
           className="flex justify-evenly items-stretch mx-48">
           <div className="flex-3/4">
 
-            <nav className="bg-[#612a08] my-5 mx-10 rounded-md flex justify-between">
+            <nav className="bg-[#5e5e5e29] my-5 mx-10 rounded-md flex justify-between items-center">
               <NavigationPanelElement text={"СЕАНС"} myLevel={1} currentLevel={currentLevel} available={true} setCurrentLevel={setCurrentLevel} success={choosedSession} />
-              <NavigationPanelElement text={"МІСЦЕ"} myLevel={2} currentLevel={currentLevel} available={choosedSession} setCurrentLevel={setCurrentLevel} success={choosedSit} />
-              <NavigationPanelElement text={"ДАНІ"} myLevel={3} currentLevel={currentLevel} available={choosedSit} setCurrentLevel={setCurrentLevel} success={choosedViewerData} />
+              <NavigationPanelArrow />
+              <NavigationPanelElement text={"МІСЦЕ"} myLevel={2} currentLevel={currentLevel} available={choosedSession} setCurrentLevel={setCurrentLevel} success={choosedSits.length} />
+              <NavigationPanelArrow />
+              <NavigationPanelElement text={"ДАНІ"} myLevel={3} currentLevel={currentLevel} available={choosedSits.length} setCurrentLevel={setCurrentLevel} success={false} />
             </nav>
 
             <AnimatePresence mode="wait">
@@ -140,8 +171,8 @@ export default function Home() {
                 style={{ fontFamily: "var(--font-pt-mono)" }} 
                 className="p-3 bg-[#4a291295] my-5 mx-10 rounded-md">
                   {currentLevel === 1 && <SessionList sessions={movieSessionList} setSession={setChoosedSession} currentSession={choosedSession} />}
-                  {currentLevel === 2 && <CinemaHall movieSession={choosedSession} setChoosedSit={setChoosedSit} />}
-                  {currentLevel === 3 && <h1 className="text-white">ХУЙ</h1>}
+                  {currentLevel === 2 && <CinemaHall movieSession={choosedSession} setChoosedSits={setChoosedSits} choosedSits={choosedSits} goNext={() => setCurrentLevel(pr => pr + 1)} />}
+                  {currentLevel === 3 && <ViewerDataInput choosedViewerData={choosedViewerData} setChoosedViewerData={setChoosedViewerData} choosedSits={choosedSits} currentSession={choosedSession} />}
               </motion.section>
             </AnimatePresence>
           </div>

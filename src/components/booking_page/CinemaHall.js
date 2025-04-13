@@ -1,27 +1,8 @@
 "use client"
 
-import { useEffect } from "react"
 import { range } from "../nonComponents"
+import { AnimatePresence, motion } from "framer-motion"
 
-function Sit({number}) {
-    return (
-        <div className="bg-amber-800 hover:bg-amber-900 duration-100 ease-in text-lg text-white flex justify-center items-center"
-             style={{ gridArea: `s${number}` }}>
-
-            <i className="fa-solid fa-couch"></i>
-        </div>
-    )
-}
-
-function Block({ changedName }) {
-    const settingsName = changedName.replace("__", "").replace("_", "")
-
-    return (
-        <div className="w-full h-full" style={{ gridArea: changedName, backdropFilter: `brightness(${BLOCK_SETTINGS[settingsName]}%)` }} />
-    )
-}
-
-const TV_SRC = "https://media.discordapp.net/attachments/723480661390000210/1360687106992898141/ewwqweqwqwewqe.jpg?ex=67fc061e&is=67fab49e&hm=1b8e18aaa79702259d38205475f2e476ebe3f81f03c157adb1c341763a5bbbda&=&format=webp&width=196&height=928"
 const BLOCK_SETTINGS = {
     "f0": "40",
     "f1": "50",
@@ -39,25 +20,119 @@ const CINEMA_AREA = `
     'sc f1 f1 f2 f2 f2 s13 f_3 s14 s15 f_4 s16'
 `
 
-export default function CinemaHall({ setChoosedSit, movieSession }) {
-    return (
-        <div className="grid grid-rows-6 grid-cols-12 bg-cover bg-center min-h-[40vh] m-5"
-             style={{ gridTemplateAreas: CINEMA_AREA }}>
-            <div className="bg-cover" style={{ gridArea: "sc", backgroundImage: `url(${TV_SRC})` }} />
-            <Block changedName={"f0"} />
-            <Block changedName={"f1"} />
-            <Block changedName={"f2"} />
-            <Block changedName={"f_2"} />
-            <Block changedName={"f3"} />
-            <Block changedName={"f_3"} />
-            <Block changedName={"f__3"} />
-            <Block changedName={"f4"} />
-            <Block changedName={"f_4"} />
-            <Block changedName={"f__4"} />
+const CHOOSED_SITS_COUNT = "Обрано місць"
+const CURRENT_PRICE = "Поточна ціна"
+const CURRENCY = "₴"
+const GO_NEXT_TEXT = "ПЕРЕЙТИ ДАЛІ"
+const HALL_NAME = "Зала"
 
-            {range(1, 17).map((element, key) => (
-                <Sit number={element} key={key} />
-            ))}
+function Sit({number, setChoosedSits, choosedSits, available }) {
+
+    function isChoosed() {
+        return choosedSits.includes(number)
+    }
+
+    function clickHandler(e) {
+        if (available && !isChoosed()) {
+            setChoosedSits(prev => [...prev, number])
+        }
+        else if (isChoosed()) {
+            setChoosedSits(prev => prev.filter(elm => elm !== number))
+        }
+    }
+
+    return (
+        <div className={`group duration-100 ease-in text-lg text-white flex justify-center items-center
+                ${available && !isChoosed() ? "bg-green-800 hover:bg-green-900 cursor-pointer" : 
+                  !available ? "bg-red-700" : "bg-blue-700 cursor-pointer hover:bg-blue-800"
+                }
+            `}
+             style={{ gridArea: `s${number}` }}
+             onClick={clickHandler}>
+             <span className={`absolute text-xs -translate-4 font-bold text-gray-200 duration-200 
+                               ${available && !isChoosed() ? "opacity-0 group-hover:opacity-100" : ""}
+                             `}>
+                {number}
+            </span>
+            <i className="fa-solid fa-couch"></i>
         </div>
+    )
+}
+
+function Block({ changedName }) {
+    const settingsName = changedName.replace("__", "").replace("_", "")
+
+    return (
+        <div className="w-full h-full" style={{ gridArea: changedName, backdropFilter: `brightness(${BLOCK_SETTINGS[settingsName]}%)` }} />
+    )
+}
+
+function AnimatedListItem({ first, last }) {
+    return (
+        <li className="flex">
+            {first}:
+            <AnimatePresence mode="wait">
+                <motion.span
+                    key={last}
+                    className="text-white ml-2 font-semibold"
+                    initial={{ opacity: 0, y: -5 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 5 }}
+                    transition={{ duration: 0.1 }}>
+                    {last}
+                </motion.span>
+            </AnimatePresence>
+        </li>
+    )
+}
+
+export default function CinemaHall({ setChoosedSits, choosedSits, movieSession, goNext }) {
+    return (
+        <section>
+            <div className="flex justify-between items-center text-white px-3">
+                <ul className="mb-5">
+                    <AnimatedListItem first={CHOOSED_SITS_COUNT} last={choosedSits.length} />
+                    <AnimatedListItem first={CURRENT_PRICE} last={`${choosedSits.length * movieSession.price_per_sit}${CURRENCY}`} />
+                    <AnimatedListItem first={HALL_NAME} last={movieSession.hall_data.hall_name} />
+                </ul>
+                <AnimatePresence mode="wait">
+                    {choosedSits.length > 0 && (
+                        <motion.button 
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            transition={{ duration: 0.2 }}
+                            className="py-2 px-4 rounded-md bg-yellow-600 hover:bg-yellow-400 duration-200 cursor-pointer" onClick={goNext}>
+                            {GO_NEXT_TEXT}
+                        </motion.button>
+                    )}
+                </AnimatePresence>
+            </div>
+
+            <div className="grid grid-rows-6 grid-cols-12 min-h-[40vh] m-5"
+                style={{ gridTemplateAreas: CINEMA_AREA }}>
+                <div className="bg-gray-600 flex justify-center items-center" style={{ gridArea: "sc" }}>
+                    <i className="fa-solid fa-tv text-white text-2xl"></i>
+                </div>
+                <Block changedName={"f0"} />
+                <Block changedName={"f1"} />
+                <Block changedName={"f2"} />
+                <Block changedName={"f_2"} />
+                <Block changedName={"f3"} />
+                <Block changedName={"f_3"} />
+                <Block changedName={"f__3"} />
+                <Block changedName={"f4"} />
+                <Block changedName={"f_4"} />
+                <Block changedName={"f__4"} />
+
+                {range(1, 17).map((element, key) => (
+                    <Sit number={element}
+                        key={key}
+                        setChoosedSits={setChoosedSits}
+                        available={!movieSession.hall_data.occupiedPlaces.map(e => e.place).includes(element)} 
+                        choosedSits={choosedSits} />
+                ))}
+            </div>
+        </section>
     )
 }

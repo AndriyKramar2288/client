@@ -2,6 +2,7 @@ import { Geist, Geist_Mono, Dancing_Script, Big_Shoulders_Inline_Text, Courier_P
 import "./globals.css";
 import Footer from "@/components/common/Footer";
 import { MainContextProvider } from "@/components/contexts/MainContext";
+import { ToastContainer } from "react-toastify";
 
 
 const geistSans = Geist({
@@ -36,6 +37,7 @@ export default function RootLayout({ children }) {
           {children}
           <Footer />
         </MainContextProvider>
+        <ToastContainer />
       </body>
     </html>
   );
