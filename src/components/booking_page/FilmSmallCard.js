@@ -3,12 +3,12 @@ import { motion } from "framer-motion"
 const IMDB_SVG_SRC = "https://upload.wikimedia.org/wikipedia/commons/6/69/IMDB_Logo_2016.svg"
 export default function FilmSmallCard({ film }) {
   return (
-    <motion.div initial={{ opacity: 0, marginTop: 0 }}
-                animate={{ opacity: 1, x: 0,  marginTop: "calc(var(--spacing) * 24)" }}
+    <motion.div initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
                 transition={{ duration: 0.5, ease: "easeOut" }}
-                className="flex flex-col bg-cover bg-center text-white" 
+                className="flex flex-col bg-cover bg-center text-white my-5 lg:my-15 lg:mt-24 rounded-xl lg:rounded-none" 
                 style={{ backgroundImage: `url(${film.src_poster})` }}>
-      <div style={{ fontFamily: "var(--font-cormorant)" }} className="flex flex-col bg-[#ffffff20] backdrop-blur-xs">
+      <div style={{ fontFamily: "var(--font-cormorant)" }} className="flex flex-col bg-[#ffffff20] backdrop-blur-xs rounded-xl lg:rounded-none">
           <h1 className="m-3 text-3xl">{film.uk_name}</h1>
           <h1 className="text-xl mx-3 my-0.5 italic text-amber-200">{film.en_name}</h1>
           <div className="flex mx-3 my-0.5 items-center">

@@ -63,7 +63,7 @@ function FooterLinkItem({text, icon_class, url}) {
 
 function FooterSection({children, icon_class, text}) {
     return (
-        <section className="bg-[#181818] rounded-md px-4 py-10 mx-3 flex flex-col items-center flex-1/2" style={{ fontFamily: "var(--font-pt-mono)" }}>
+        <section className="bg-[#181818] rounded-md px-4 py-10 mx-3 flex flex-col items-center flex-1/2 my-4 md:my-0" style={{ fontFamily: "var(--font-pt-mono)" }}>
             <div className="flex items-center mb-3 font-semibold">
                 <i className={`${icon_class} mr-2`}></i>
                 <h1 className="text-center">{text}</h1>
@@ -76,7 +76,7 @@ function FooterSection({children, icon_class, text}) {
 export default function Footer() {
     return (
         <footer className="bg-[#131313f3] text-white">
-            <div className="flex">
+            <div className="flex md:flex-row flex-col">
                 <FooterSection text={CONTACTS} icon_class={"fa-regular fa-address-book"}>
                     <ul>
                         {ITEMS_DATA.map((element, key) => <FooterListItem first={element.first} last={element.last} key={key} />)}

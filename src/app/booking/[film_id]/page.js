@@ -107,7 +107,7 @@ function NavigationPanelElement({ text, myLevel, currentLevel, setCurrentLevel, 
   return (
     <motion.button
       onClick={available ? () => setCurrentLevel(myLevel) : () => {}} 
-      className={`${getStateClasses()} text-white duration-300 mx-2 rounded-md text-xl font-bold text-center flex-1/3`}
+      className={`${getStateClasses()} text-white duration-300 rounded-md text-xl font-bold text-center flex-1/3 px-2 py-1`}
       style={{ fontFamily: "var(--font-pt-mono)" }}>
       {text}
     </motion.button>
@@ -116,7 +116,7 @@ function NavigationPanelElement({ text, myLevel, currentLevel, setCurrentLevel, 
 
 function NavigationPanelArrow() {
   return (
-    <i className="fa-solid fa-angles-right text-white"></i>
+    <i className="fa-solid fa-angles-right text-white m-2"></i>
   )
 }
 
@@ -144,16 +144,16 @@ export default function Home() {
 
   return (
     <div className="bg-center bg-cover bg-fixed" style={{ backgroundImage: `url(${BG_URL})` }}>
-      <div className="backdrop-blur-xs backdrop-contrast-100 backdrop-sepia-50 backdrop-grayscale-25 min-h-screen flex flex-col">
+      <div className="backdrop-blur-xs backdrop-contrast-100 backdrop-sepia-50 backdrop-grayscale-25 lg:min-h-screen flex flex-col">
         <Header headText={BOOKING_A_MOVIE} />
 
         <motion.main 
           initial={{ flexGrow: 0 }}
           animate={{ flexGrow: 1, transition: { duration: 0.4 } }}
-          className="flex justify-evenly items-stretch mx-48">
-          <div className="flex-3/4">
+          className="flex flex-col-reverse lg:flex-row justify-evenly items-stretch mx-16 lg:mx-48">
+          <div className="lg:flex-3/4 lg:p-10">
 
-            <nav className="bg-[#5e5e5e29] my-5 mx-10 rounded-md flex justify-between items-center">
+            <nav className="bg-[#5e5e5e29] rounded-md flex justify-between items-center">
               <NavigationPanelElement text={"СЕАНС"} myLevel={1} currentLevel={currentLevel} available={true} setCurrentLevel={setCurrentLevel} success={choosedSession} />
               <NavigationPanelArrow />
               <NavigationPanelElement text={"МІСЦЕ"} myLevel={2} currentLevel={currentLevel} available={choosedSession} setCurrentLevel={setCurrentLevel} success={choosedSits.length} />
@@ -165,18 +165,18 @@ export default function Home() {
               <motion.section
                 key={currentLevel}
                 initial={{ opacity: 0, x: -60 }}
-                animate={{ opacity: 1, x: 0,  marginTop: "calc(var(--spacing) * 24)" }}
+                animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: 60 }}
                 transition={{ duration: 0.4, ease: "easeOut" }}
                 style={{ fontFamily: "var(--font-pt-mono)" }} 
-                className="p-3 bg-[#4a291295] my-5 mx-10 rounded-md">
+                className="p-3 bg-[#4a291295] my-5 rounded-md">
                   {currentLevel === 1 && <SessionList sessions={movieSessionList} setSession={setChoosedSession} currentSession={choosedSession} />}
                   {currentLevel === 2 && <CinemaHall movieSession={choosedSession} setChoosedSits={setChoosedSits} choosedSits={choosedSits} goNext={() => setCurrentLevel(pr => pr + 1)} />}
                   {currentLevel === 3 && <ViewerDataInput choosedViewerData={choosedViewerData} setChoosedViewerData={setChoosedViewerData} choosedSits={choosedSits} currentSession={choosedSession} />}
               </motion.section>
             </AnimatePresence>
           </div>
-          <div className="flex-1/4 bg-[#251f1979]">
+          <div className="lg:flex-1/4 lg:bg-[#251f1979]">
               <FilmSmallCard film={bookingFilm} /> 
           </div>
         </motion.main>

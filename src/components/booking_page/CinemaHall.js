@@ -42,19 +42,19 @@ function Sit({number, setChoosedSits, choosedSits, available }) {
     }
 
     return (
-        <div className={`group duration-100 ease-in text-lg text-white flex justify-center items-center
+        <div className={`group duration-100 ease-in text-lg text-white flex justify-center items-center p-3
                 ${available && !isChoosed() ? "bg-green-800 hover:bg-green-900 cursor-pointer" : 
                   !available ? "bg-red-700" : "bg-blue-700 cursor-pointer hover:bg-blue-800"
                 }
             `}
              style={{ gridArea: `s${number}` }}
              onClick={clickHandler}>
-             <span className={`absolute text-xs -translate-4 font-bold text-gray-200 duration-200 
+             <span className={`absolute text-xs lg:-translate-y-4 -translate-y-3 font-bold text-gray-200 duration-200 
                                ${available && !isChoosed() ? "opacity-0 group-hover:opacity-100" : ""}
                              `}>
                 {number}
             </span>
-            <i className="fa-solid fa-couch"></i>
+            <i className="fa-solid fa-couch lg:text-lg text-xs"></i>
         </div>
     )
 }
@@ -89,7 +89,7 @@ function AnimatedListItem({ first, last }) {
 export default function CinemaHall({ setChoosedSits, choosedSits, movieSession, goNext }) {
     return (
         <section>
-            <div className="flex justify-between items-center text-white px-3">
+            <div className="flex justify-between lg:flex-row flex-col items-center text-white px-3">
                 <ul className="mb-5">
                     <AnimatedListItem first={CHOOSED_SITS_COUNT} last={choosedSits.length} />
                     <AnimatedListItem first={CURRENT_PRICE} last={`${choosedSits.length * movieSession.price_per_sit}${CURRENCY}`} />
@@ -109,10 +109,10 @@ export default function CinemaHall({ setChoosedSits, choosedSits, movieSession, 
                 </AnimatePresence>
             </div>
 
-            <div className="grid grid-rows-6 grid-cols-12 min-h-[40vh] m-5"
+            <div className="grid grid-rows-6 grid-cols-12 lg:min-h-[40vh] m-5"
                 style={{ gridTemplateAreas: CINEMA_AREA }}>
                 <div className="bg-gray-600 flex justify-center items-center" style={{ gridArea: "sc" }}>
-                    <i className="fa-solid fa-tv text-white text-2xl"></i>
+                    <i className="fa-solid fa-tv text-white sm:text-2xl texl-lg"></i>
                 </div>
                 <Block changedName={"f0"} />
                 <Block changedName={"f1"} />

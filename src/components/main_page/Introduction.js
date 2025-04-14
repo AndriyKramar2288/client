@@ -2,6 +2,9 @@
 
 import { motion } from "framer-motion"
 
+const IMAGE_SRC = "/images/2025-04-09_20.35.47.png"
+const LOGO_PART1 = "Undisputed"
+const LOGO_PART2 = "canvas"
 
 function Sides() {
     return (
@@ -14,21 +17,15 @@ function Sides() {
 }
 
 export default function Introduction() {
-    const IMAGE_SRC = "/images/2025-04-09_20.35.47.png"
-    const FILM_STRIP_SRC = "/images/tikigiki_filmstrip-01.svg"
-    const LOGO_PART1 = "Undisputed"
-    const LOGO_PART2 = "canvas"
-
     return (
         <div style={{ backgroundImage: `url(${IMAGE_SRC})` }} className="min-h-lvh flex justify-center items-stretch flex-col w-full">
             <Sides />
             <motion.div
                 initial={{ opacity: 1, minHeight: "0lvh" }}
                 animate={{ opacity: 1, minHeight: "100lvh" }}
-                transition={{ duration: 0.4, ease: "easeOut" }}
-                className="backdrop-blur-xs backdrop-sepia-50 flex justify-center items-center">
-                <motion.div className="scrolling-background flex items-center justify-center w-full text-5xl text-white"
-                            style={{ backgroundImage: `url(${FILM_STRIP_SRC})` }}>
+                transition={{ duration: 0.4, ease: "easeOut" }} 
+                className="backdrop-blur-xs backdrop-sepia-50 backdrop-contrast-150 md:backdrop-contrast-100 flex justify-center items-center">
+                <motion.div className="scrolling-background bg-[#8f6d4555] flex flex-col md:flex-row items-center justify-center w-full text-5xl text-white">
                     <motion.div className="p-10 w-[444px] text-[#FFDD55] flex items-center justify-center shadow-2xl"
                                 initial={{ background: "rgb(14,14,14)",
                                            background: "linear-gradient(90deg, rgba(14,14,14,0.7) 0%, rgba(14,14,14,0.7) 100%)" }}

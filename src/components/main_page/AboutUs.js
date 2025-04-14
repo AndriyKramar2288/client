@@ -31,12 +31,12 @@ function AnimatedBlock({current_state}) {
                 style={{ backgroundImage: `url(${current_state.background})` }}>
             <AnimatePresence mode="wait">
                 <motion.div key={JSON.stringify(current_state)}
-                            className="flex justify-center px-32 py-4"
+                            className="flex flex-col justify-center lg:items-start items-center lg:flex-row lg:px-32 px-3 py-4 overflow-hidden"
                             initial={{ backdropFilter: "blur(100px)" }}
                             animate={{ backdropFilter: "blur(4px)", transition: { duration: 0.7, ease: "easeOut" } }}
                             exit={{ backdropFilter: "blur(100px)", transition: { duration: 0.1, ease: "easeIn" } }}>
                     <div className="flex-1/2 flex flex-col">
-                        <div className="flex"
+                        <div className="flex whitespace-nowrap"
                             style={{fontFamily: "var(--font-pt-mono)"}}>
                             {WE_ARE}
                                 <motion.h1
@@ -44,7 +44,7 @@ function AnimatedBlock({current_state}) {
                                     animate={{ clipPath: "inset(0 0% 0 0)", transition: { duration: 0.75, delay: 0.5, ease: "easeInOut" } }}
                                     exit={{ clipPath: "inset(0 100% 0 0)", transition: { duration: 0.25, ease: "easeOut" } }}
                                     key={current_state.message}
-                                    className="overflow-hidden ml-2 whitespace-normal font-bold"
+                                    className="overflow-hidden ml-2 font-bold"
                                 >
                                     {current_state.message}
                                 </motion.h1>
@@ -59,13 +59,13 @@ function AnimatedBlock({current_state}) {
                             {current_state.details}
                         </motion.div>
                     </div>
-                    <motion.div className="flex-1/2 rounded-md ml-10"
+                    <motion.div className="flex-1/2 rounded-md lg:ml-10 lg:mt-0 mt-5"
                                 initial={{ opacity: 0, x: -100 }}
                                 animate={{ opacity: 1, x: 0, transition: { duration: 0.75, delay: 0.25 } }}
                                 exit={{ opacity: 0, x: 100, transition: { duration: 0.25 } }}
                                 key={current_state.photo}
                         >
-                        <img src={current_state.photo} alt="fuck" className="rounded-md shadow-black shadow-xl h-[20lvw]" />
+                        <img src={current_state.photo} alt="fuck" className="rounded-md shadow-black shadow-xl lg:h-[20lvw] md:max-h-[20lvw]" />
                     </motion.div>
                 </motion.div>
             </AnimatePresence>

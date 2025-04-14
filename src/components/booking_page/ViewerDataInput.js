@@ -43,7 +43,7 @@ function InputField({ field, choosedViewerData, setChoosedViewerData, sit }) {
     }, [text])
 
     return (
-        <li className="flex items-center justify-between my-1">
+        <li className="flex items-center justify-between my-1 flex-col sm:flex-row">
             <span>{field["text"].toUpperCase()}:</span>
             <input className="ml-3 bg-amber-900 border-none text-amber-50 p-1 outline-none focus:bg-amber-700 hover:bg-amber-800 duration-200"
                     onChange={(e) => setText(e.target.value)}
@@ -105,8 +105,8 @@ export default function ViewerDataInput({ choosedViewerData, setChoosedViewerDat
     }
 
     return (
-        <div className="text-white flex">
-            <div className="flex-2/5 bg-[#42393929] py-2 px-4 m-1 text-sm flex flex-col items-center">
+        <div className="text-white flex flex-col-reverse lg:flex-row">
+            <div className="lg:flex-2/5 bg-[#42393929] py-2 px-4 m-1 text-sm flex flex-col items-center">
                 <h1 className="text-md font-bold my-3 text-center">{BASIC_INFO.toUpperCase()}</h1>
                 <ul>
                     <li className="flex items-center mb-2">
@@ -128,7 +128,7 @@ export default function ViewerDataInput({ choosedViewerData, setChoosedViewerDat
                 </ul>
                 <ConfirmButton text={TO_BOOK.toUpperCase()} clickHandler={() => confirmBookButtonHandler()} />
             </div>
-            <div className="flex-3/5 m-1">
+            <div className="lg:flex-3/5 m-1">
                 {choosedSits.map((sit, sit_index) => (
                     <div key={sit_index} className="flex flex-col justify-items-stretch bg-[#6f6f6f29] py-2 px-4 mb-2">
                         <div className="flex justify-between items-center my-3 font-semibold">
