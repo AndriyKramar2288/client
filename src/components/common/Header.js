@@ -2,6 +2,16 @@
 
 import { useRouter } from "next/navigation"
 import { useMainContext } from "../contexts/MainContext"
+import { useEffect } from "react"
+import { alertSmth, BACKEND_API_URL, GOOGLE_CLIENT_ID, successSmth, TOKEN_LOCAL_STORAGE } from "../services/nonComponents"
+import { GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google"
+
+const USER_LOADING_ERROR = "Непередбачувана помилка завантаження користувача!"
+const MAIN_PAGE = "Головна"
+const SUCCESS_LOGIN = "Автентифікація через Google успішна!"
+const PROFILE_PAGE = "Профіль"
+const SERVER_GG = "Сервер помер... 😭"
+const FAILURE_LOGIN = "Непередбачена загадкова помилка!"
 
 function HeaderButtonDecoration() {
     return (
@@ -33,16 +43,88 @@ function HeaderSign({ text }) {
 }
 
 export default function Header({ headText }) {
-    const {user} = useMainContext()
+    const [user, setUser] = useMainContext()
     const route = useRouter()
+
+    function logout() {
+        setUser(null)
+        localStorage.removeItem(TOKEN_LOCAL_STORAGE)
+    }
+
+    async function successGoogleLoginHandler(credentialResponse) {
+        console.log(credentialResponse)
+
+        try {
+            const api_response = await fetch(`${BACKEND_API_URL}/auth/google_id_token`, {
+                method: "POST",
+                body: `${credentialResponse.credential}`
+            })
+            if (api_response.ok) {
+                const data = await api_response.json()
+    
+                successSmth(SUCCESS_LOGIN)
+                setUser(data.cinemaUser)
+                localStorage.setItem(TOKEN_LOCAL_STORAGE, data.accessToken)
+            }
+            else {
+                alertSmth(FAILURE_LOGIN)
+            }
+        }
+        catch (error) {
+            alertSmth(SERVER_GG)
+        }
+    }
+
+    async function checkAndUpdateUser() {
+        const token = localStorage.getItem(TOKEN_LOCAL_STORAGE)
+        if (token) {
+            try {
+                const gettedUser = await fetch(`${BACKEND_API_URL}/users/`, {
+                    headers: {
+                        "Authorization": `Bearer ${token}`
+                    }
+                })
+                if (gettedUser.ok) {
+                    const gettedUserJson = await gettedUser.json()
+                    setUser(gettedUserJson)
+                }
+                else if (gettedUser.status === 401) {
+                    logout()
+                }
+                else {
+                    alertSmth(USER_LOADING_ERROR)
+                }
+            }
+            catch (error) {
+                alertSmth(SERVER_GG)
+            }
+        }
+    }
+
+    useEffect(() => {
+        checkAndUpdateUser()
+    }, [])
+
 
     return (
         <header className="">
             <nav className="flex bg-amber-600 justify-around">
-                <HeaderButton iconClass={"fa-regular fa-compass"} text={"Головна"} clickHandler={() => route.push("/")} />
+                <HeaderButton iconClass={"fa-regular fa-compass"} text={MAIN_PAGE} clickHandler={() => route.push("/")} />
                 {/* {user && <HeaderButton iconClass={"fa-regular fa-calendar"} text={"Заброньовані сеанси"} />} */}
                 <HeaderSign text={headText} />
-                <HeaderButton iconClass={"fa-regular fa-user"} text={"Увійти"} />
+                {user ? 
+                    <HeaderButton iconClass={"fa-regular fa-user"} text={PROFILE_PAGE} clickHandler={() => route.push("/profile")} /> 
+                :   <div className="flex justify-center items-center bg-amber-700 px-3 mx-3.5 hover:bg-amber-800 duration-300 font-(family-name:--font-pt-mono)">
+                        <div className="invert-100 cursor-pointer">
+                            <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
+                                <GoogleLogin
+                                    onError={() => alertSmth(FAILURE_LOGIN)}
+                                    onSuccess={response => successGoogleLoginHandler(response)}
+                                />
+                            </GoogleOAuthProvider>
+                        </div>
+                    </div>
+                }
             </nav>
         </header>
     )

@@ -1,6 +1,6 @@
 "use client"
 
-import { range } from "../nonComponents"
+import { range } from "../services/nonComponents"
 import { AnimatePresence, motion } from "framer-motion"
 
 const BLOCK_SETTINGS = {

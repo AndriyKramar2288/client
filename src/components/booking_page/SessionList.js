@@ -1,7 +1,7 @@
 import { motion } from "framer-motion"
 
 const FUTURE_SESSIONS = "Майбутні сеанси"
-import { formatUkrainianDate } from "@/components/nonComponents";
+import { formatUkrainianDate } from "@/components/services/nonComponents";
 
 const CURRENCY = "₴"
 const ONE_TICKET_PRICE = "Вартість квитка"

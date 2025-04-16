@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { alertSmth, formatUkrainianDate, isValidEmail, isValidPhoneNumber, successSmth } from "../nonComponents"
+import { alertSmth, formatUkrainianDate, isValidEmail, isValidPhoneNumber, successSmth } from "../services/nonComponents"
 import { useRouter } from "next/navigation"
 
 const PUT_YOUR_DATA = "Введіть дані"
