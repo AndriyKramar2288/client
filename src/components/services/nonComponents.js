@@ -63,3 +63,17 @@ export function successSmth(message) {
         }
     })
 }
+
+export function emptyListSplitter(string, splitter) {
+    return string.trim() ? string.split(splitter) : []
+}
+
+export function logout(setUsr, router) {
+    setUsr(null)
+    localStorage.removeItem(TOKEN_LOCAL_STORAGE)
+    router.push("/")
+}
+
+export function isDev() {
+    return (process.env.NODE_ENV === 'development')
+}

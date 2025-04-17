@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation"
 import { useMainContext } from "../contexts/MainContext"
 import { useEffect } from "react"
-import { alertSmth, BACKEND_API_URL, GOOGLE_CLIENT_ID, successSmth, TOKEN_LOCAL_STORAGE } from "../services/nonComponents"
+import { alertSmth, BACKEND_API_URL, GOOGLE_CLIENT_ID, logout, successSmth, TOKEN_LOCAL_STORAGE } from "../services/nonComponents"
 import { GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google"
 
 const USER_LOADING_ERROR = "Непередбачувана помилка завантаження користувача!"
@@ -44,12 +44,7 @@ function HeaderSign({ text }) {
 
 export default function Header({ headText }) {
     const [user, setUser] = useMainContext()
-    const route = useRouter()
-
-    function logout() {
-        setUser(null)
-        localStorage.removeItem(TOKEN_LOCAL_STORAGE)
-    }
+    const router = useRouter()
 
     async function successGoogleLoginHandler(credentialResponse) {
         console.log(credentialResponse)
@@ -61,7 +56,7 @@ export default function Header({ headText }) {
             })
             if (api_response.ok) {
                 const data = await api_response.json()
-    
+                router.push("/")
                 successSmth(SUCCESS_LOGIN)
                 setUser(data.cinemaUser)
                 localStorage.setItem(TOKEN_LOCAL_STORAGE, data.accessToken)
@@ -89,7 +84,7 @@ export default function Header({ headText }) {
                     setUser(gettedUserJson)
                 }
                 else if (gettedUser.status === 401) {
-                    logout()
+                    logout(setUser, router)
                 }
                 else {
                     alertSmth(USER_LOADING_ERROR)
@@ -109,11 +104,11 @@ export default function Header({ headText }) {
     return (
         <header className="">
             <nav className="flex bg-amber-600 justify-around">
-                <HeaderButton iconClass={"fa-regular fa-compass"} text={MAIN_PAGE} clickHandler={() => route.push("/")} />
+                <HeaderButton iconClass={"fa-regular fa-compass"} text={MAIN_PAGE} clickHandler={() => router.push("/")} />
                 {/* {user && <HeaderButton iconClass={"fa-regular fa-calendar"} text={"Заброньовані сеанси"} />} */}
                 <HeaderSign text={headText} />
                 {user ? 
-                    <HeaderButton iconClass={"fa-regular fa-user"} text={PROFILE_PAGE} clickHandler={() => route.push("/profile")} /> 
+                    <HeaderButton iconClass={"fa-regular fa-user"} text={PROFILE_PAGE} clickHandler={() => router.push("/profile")} /> 
                 :   <div className="flex justify-center items-center bg-amber-700 px-3 mx-3.5 hover:bg-amber-800 duration-300 font-(family-name:--font-pt-mono)">
                         <div className="invert-100 cursor-pointer">
                             <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>

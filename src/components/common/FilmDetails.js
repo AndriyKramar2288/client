@@ -15,7 +15,7 @@ const DETAILS_LIST_ITEM_TEXTS = {
 
 function DetailsListItem({first, last, icon_class}) {
     return (
-        <li className="flex items-center flex-col sm:flex-row mb-3">
+        <li className="flex items-center sm:items-start flex-col sm:flex-row mb-3">
             <div className="flex items-center">
                 <i className={`mr-2 text-xs ${icon_class}`}></i>
                 <span className="font-extrabold mr-2">{first}:</span>
