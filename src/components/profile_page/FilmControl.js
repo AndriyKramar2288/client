@@ -26,7 +26,15 @@ const initialFilm = {
     about: "",
 }
 
-function FilmList ({ currentFilms, setCurrentFilms }) {
+function FilmCardButton({ iconClass, clickHandler }) {
+    return (
+        <button className='group bg-[#ab6d2155] rounded-md mx-1 hover:bg-[#ab6d21b3] cursor-pointer p-2' onClick={clickHandler}>
+            <i className={`text-red-500 duration-200 group-hover:text-red-900 ${iconClass}`}></i>
+        </button>
+    )
+}
+
+function FilmList ({ currentFilms, setCurrentFilms, createSession }) {
 
     async function performSuicide(film_id) {
         const token = localStorage.getItem(TOKEN_LOCAL_STORAGE)
@@ -47,7 +55,7 @@ function FilmList ({ currentFilms, setCurrentFilms }) {
                     }
                 }
                 catch (error) {
-                    alertSmth(isDev() ? `${error}` : JUST_ERROR)
+                    alertSmth(isDev() ? `${error.message}` : JUST_ERROR)
                 }
             }
     }
@@ -59,19 +67,20 @@ function FilmList ({ currentFilms, setCurrentFilms }) {
                 {currentFilms.map((film, index) => (
                     <div
                         key={index}
-                        className="flex bg-[#3b2e1c86] hover:bg-[#5c422a8a] p-4 m-3 rounded-xl transition-all duration-300">
-                            <img
-                            src={film.src_poster}
-                            alt={`${film.uk_name} poster`}
-                            className="w-24 h-36 object-cover rounded-md mr-4"
-                            />
-                            <div className="flex flex-col justify-between text-left">
-                                <div className='flex justify-between'>
-                                    <h2 className="text-xl font-bold">{film.uk_name}</h2>
-                                    <button className='ml-4' onClick={() => performSuicide(film.id)}>
-                                        <i className="fa-solid fa-trash text-red-500 duration-200 hover:text-red-900"></i>
-                                    </button>
+                        className="flex bg-[#855d2586] hover:bg-[#604d3eb9] p-4 m-3 rounded-xl transition-all duration-300">
+                            <div className='flex flex-col items-center justify-between mr-3'>
+                                <img
+                                src={film.src_poster}
+                                alt={`${film.uk_name} poster`}
+                                className="w-24 h-36 object-cover rounded-md"
+                                />
+                                <div className='flex'>
+                                    <FilmCardButton clickHandler={() => createSession(film)} iconClass={"fa-solid fa-tv"} />
+                                    <FilmCardButton clickHandler={() => performSuicide(film.id)} iconClass={"fa-solid fa-trash"} />
                                 </div>
+                            </div>
+                            <div className="flex flex-col justify-between text-left">
+                                <h2 className="text-xl font-bold">{film.uk_name}</h2>
                                 <p className="text-sm italic text-gray-300">{film.en_name}</p>
                                 <p className="text-sm"><span className="font-semibold">Режисер:</span> {film.director}</p>
                                 <p className="text-sm"><span className="font-semibold">Рік:</span> {film.release_year}</p>
@@ -91,7 +100,7 @@ function FilmList ({ currentFilms, setCurrentFilms }) {
     )
 }
 
-export default function FilmControl({ currentFilms, setCurrentFilms }) {
+export default function FilmControl({ currentFilms, setCurrentFilms, createSession }) {
 
     const [new_film, setNew_film] = useState(initialFilm);    
 
@@ -121,15 +130,20 @@ export default function FilmControl({ currentFilms, setCurrentFilms }) {
                     }
                 }
                 catch (error) {
-                    alertSmth(`${error}`)
+                    alertSmth(`${error.message}`)
                 }
             }
     }
 
     return (
-        <div className="flex flex-col p-8 bg-[#2e201373] rounded-md text-white">
-            {currentFilms.length > 0 && <FilmList currentFilms={currentFilms} setCurrentFilms={setCurrentFilms} />}
-            <section className="flex">
+        <div className="flex flex-col p-8 rounded-md text-white">
+            {currentFilms.length > 0 && (
+                <div>
+                    <FilmList currentFilms={currentFilms} setCurrentFilms={setCurrentFilms} createSession={createSession} />
+                    <hr className="my-4 border-amber-800" />
+                </div>
+            )}
+            <section className="flex mt-4">
                 <AddFilmSection film={new_film} setFilm={setNew_film} saveFilm={saveFilm} />
             </section>
         </div>

@@ -6,8 +6,8 @@ const FILM_CREATION = "Додавання фільму"
 const ADD_FILM = "Додати фільм"
 
 const Field = ({ label, name, value, onChange, type = "text", textarea = false, ...rest }) => (
-    <label className="flex items-center justify-between bg-amber-800 my-2 p-1 rounded-lg">
-        <h1 className='mr-2'>{label}</h1>
+    <label className="flex items-start justify-between bg-amber-800 my-2 p-1 rounded-lg">
+        <h1 className='m-2'>{label}</h1>
         {textarea ? (
             <textarea
                 name={name}
@@ -54,7 +54,7 @@ export default function AddFilmSection({ film, setFilm, saveFilm }) {
 
     return (
         <section className="flex-col items-center max-w-4xl">
-            <h1 className="text-xl font-bold mb-6 text-center">{FILM_CREATION}</h1>
+            <h1 className="text-lg font-bold my-3 text-center">{FILM_CREATION.toUpperCase()}</h1>
             <div className="flex flex-col">
                 <Field label="Українська назва" name="uk_name" value={film.uk_name} onChange={handleChange} />
                 <Field label="Англійська назва" name="en_name" value={film.en_name} onChange={handleChange} />
