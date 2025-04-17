@@ -77,7 +77,7 @@ export default function AdminPanel() {
 
     return (
         <div className="flex flex-col">
-            <nav className="bg-[#18173e55] flex justify-start rounded-sm mb-5">
+            <nav className="bg-[#18173e55] flex xl:justify-start justify-center rounded-sm mb-5">
                 <NavigationButton text={FILMS_H} clickHandler={() => setSelectedCategory(1)} active={1 === selectedCategory} />
                 <NavigationButton text={SESSIONS_H} clickHandler={() => setSelectedCategory(2)} active={2 === selectedCategory} />
                 <NavigationButton text={HALLS_H} clickHandler={() => setSelectedCategory(3)} active={3 === selectedCategory} />

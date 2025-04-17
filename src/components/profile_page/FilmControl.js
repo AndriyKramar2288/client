@@ -63,7 +63,7 @@ function FilmList ({ currentFilms, setCurrentFilms, createSession }) {
     return (
         <section className='flex flex-col items-center'>
             <h1 className="font-semibold mb-2">{CURRENT_FILMS.toUpperCase()}</h1>
-            <ul className='flex justify-center'>
+            <ul className='flex justify-center sm:justify-start flex-wrap xl:flex-nowrap'>
                 {currentFilms.map((film, index) => (
                     <div
                         key={index}

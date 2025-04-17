@@ -6,7 +6,7 @@ const FILM_CREATION = "Додавання фільму"
 const ADD_FILM = "Додати фільм"
 
 const Field = ({ label, name, value, onChange, type = "text", textarea = false, ...rest }) => (
-    <label className="flex items-start justify-between bg-amber-800 my-2 p-1 rounded-lg">
+    <label className="flex sm:flex-row flex-col items-center sm:items-start justify-between bg-amber-800 my-2 p-1 rounded-lg">
         <h1 className='m-2'>{label}</h1>
         {textarea ? (
             <textarea

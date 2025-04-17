@@ -39,7 +39,7 @@ function BookingList({ bookings }) {
 
 function SmallUser({ user }) {
     return (
-        <div className="rounded-md bg-[#000000af] p-3 flex flex-col items-center">
+        <div className="rounded-md bg-[#000000af] p-3 flex flex-col items-center mb-2">
             {user.photoSrc && <img src={user.photoSrc} className="w-[50%] h-[50%] rounded-full mb-2" />}
             <h1 className="mb-2">{user.username}</h1>
             <h1 className="mb-2">{user.email}</h1>
@@ -51,7 +51,7 @@ function LeftButton({ text, clickHandler, active }) {
     return (
         <button
             onClick={clickHandler} 
-            className={`my-2 duration-500 px-7 py-2 rounded-sm
+            className={`mb-2 duration-500 px-7 py-2 rounded-sm
                         ${active ? " bg-gray-500" : "bg-gray-900 hover:bg-gray-800 cursor-pointer"}
             `}>
         {text}                    
@@ -104,11 +104,11 @@ export default function LoginPage() {
         <div className="bg-cover bg-fixed" style={{ backgroundImage: `url(${BG_URL})`, fontFamily: "var(--font-pt-mono)" }}>
             <div className="min-h-screen backdrop-blur-sm backdrop-contrast-150 text-white flex flex-col">
                 <Header headText={PROFILE_HEAD.toUpperCase()} />
-                <main className="flex justify-between px-40 py-10 flex-1">
-                    <nav className="flex-1/4 bg-[#43281173] mr-10 rounded-md flex flex-col items-center justify-between p-4">
+                <main className="flex justify-between flex-col xl:flex-row xl:px-20 2xl:px-40 py-10 flex-1">
+                    <nav className="flex-1/4 bg-[#43281173] xl:mr-10 rounded-md flex flex-col items-center justify-between p-4">
                         <section>
                             {user && <SmallUser user={user} />}
-                            <div className="flex flex-col items-end">
+                            <div className="flex flex-col xl:items-end items-center">
                                 <LeftButton active={1 === selectedCategory} 
                                             text={MY_BOOKING} 
                                             clickHandler={() => setSelectedCategory(1)} />

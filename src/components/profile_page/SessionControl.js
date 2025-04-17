@@ -164,7 +164,7 @@ export default function SessionControl({ creationSessionFilm, currentHalls }) {
             setNewSession({ date: "", format: "", price_per_sit: "", hall_id: "" });
             successSmth(SUCCESS_CREATE_SESSION)
         } catch (err) {
-            alertSmth(BAD_CREATING_SESSION);
+            alertSmth(JSON.parse(err.message).message ?? BAD_CREATING_SESSION);
         }
     }
 

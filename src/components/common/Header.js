@@ -72,7 +72,7 @@ export default function Header({ headText }) {
 
     async function checkAndUpdateUser() {
         const token = localStorage.getItem(TOKEN_LOCAL_STORAGE)
-        if (token) {
+        if (token && !user) {
             try {
                 const gettedUser = await fetch(`${BACKEND_API_URL}/users/`, {
                     headers: {
@@ -93,6 +93,10 @@ export default function Header({ headText }) {
             catch (error) {
                 alertSmth(SERVER_GG)
             }
+        }
+        else if (!token && user) {
+            alertSmth("wtf maaan")
+            logout(setUser, router)
         }
     }
 
