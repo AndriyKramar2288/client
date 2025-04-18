@@ -16,7 +16,7 @@ export default function HallControl({ currentHalls, setCurrentHalls }) {
     const token = localStorage.getItem(TOKEN_LOCAL_STORAGE);
 
     async function createHall() {
-        if (!newHallName.trim()) return alert("Назва зали не може бути порожньою")
+        if (!newHallName.trim()) return alertSmth("Назва зали не може бути порожньою")
 
         try {
             setLoading(true);
@@ -31,7 +31,7 @@ export default function HallControl({ currentHalls, setCurrentHalls }) {
 
             if (!response.ok) {
                 const msg = await response.text();
-                throw new Error(msg || "Помилка при створенні")
+                throw new Error(msg)
             }
 
             const created = await response.json()
@@ -39,7 +39,7 @@ export default function HallControl({ currentHalls, setCurrentHalls }) {
             setNewHallName("")
             successSmth(GOOD_CREATE)
         } catch (err) {
-            alert("Не вдалося створити залу: " + err.message)
+            alertSmth("Не вдалося створити залу: " + err.message)
         } finally {
             setLoading(false)
         }
@@ -58,10 +58,11 @@ export default function HallControl({ currentHalls, setCurrentHalls }) {
                 setCurrentHalls(prev => prev.filter(h => h.id !== id));
                 successSmth(SUCCESS_DELETE)
             } else {
-                throw new Error(BAD_DELETE);
+                const text = await response.text()
+                throw new Error(text)
             }
         } catch (err) {
-            alertSmth(err.message);
+            alertSmth(JSON.parse(err.message).message ?? BAD_DELETE);
         }
     }
 

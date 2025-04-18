@@ -89,7 +89,8 @@ export default function AdminPanel() {
                                 exit={{ opacity: 0, y: 15 }}
                                 transition={{ duration: 0.1, ease: "easeIn" }}
                                 key={selectedCategory}>
-                        {selectedCategory === 1 && <FilmControl currentFilms={currentFilms} setCurrentFilms={setCurrentFilms} createSession={createSession} />}
+                        {selectedCategory === 1 && <FilmControl currentFilms={currentFilms} initFilms={initFilms}
+                                                                setCurrentFilms={setCurrentFilms} createSession={createSession} />}
                         {selectedCategory === 2 && <SessionControl creationSessionFilm={creationSessionFilm} currentHalls={currentHalls} />}   
                         {selectedCategory === 3 && <HallControl currentHalls={currentHalls} setCurrentHalls={setCurrentHalls} />}   
                 </motion.section>

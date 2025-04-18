@@ -8,6 +8,7 @@ const SUCCESS_ADDED = "Фільм успішно додано!"
 const JUST_ERROR = "Помилка сервера (походу)"
 const BAD_REQUEST = "Ви забули вказати деякі дані!"
 const CURRENT_FILMS = "Додані фільми"
+const BAD_CLIENT_DELETE = "Помилка клієнта. Перезавантажте сторінку, будь ласочка... 😭"
 
 const initialFilm = {
     uk_name: "",
@@ -35,10 +36,9 @@ function FilmCardButton({ iconClass, clickHandler }) {
 }
 
 function FilmList ({ currentFilms, setCurrentFilms, createSession }) {
-
     async function performSuicide(film_id) {
         const token = localStorage.getItem(TOKEN_LOCAL_STORAGE)
-            if (token) {
+            if (token && film_id) {
                 try {
                     const gettedFilms = await fetch(`${BACKEND_API_URL}/films/${film_id}`, {
                         headers: {
@@ -51,12 +51,16 @@ function FilmList ({ currentFilms, setCurrentFilms, createSession }) {
                         successSmth(SUCCESS_DELETED)
                     }
                     else {
-                        throw new Error("LOL")
+                        const text = await gettedFilms.text()
+                        throw new Error(text)
                     }
                 }
                 catch (error) {
-                    alertSmth(isDev() ? `${error.message}` : JUST_ERROR)
+                    alertSmth(isDev() ? `${JSON.parse(error.message).message ?? 'LOL'}` : JUST_ERROR)
                 }
+            }
+            else {
+                alertSmth(BAD_CLIENT_DELETE)
             }
     }
 
@@ -100,7 +104,7 @@ function FilmList ({ currentFilms, setCurrentFilms, createSession }) {
     )
 }
 
-export default function FilmControl({ currentFilms, setCurrentFilms, createSession }) {
+export default function FilmControl({ currentFilms, setCurrentFilms, createSession, initFilms }) {
 
     const [new_film, setNew_film] = useState(initialFilm);    
 
@@ -117,8 +121,7 @@ export default function FilmControl({ currentFilms, setCurrentFilms, createSessi
                         body: JSON.stringify(film_toSave)
                     })
                     if (gettedFilms.status === 201) {
-                        const gettedJson = await gettedFilms.json()
-                        setCurrentFilms(prev => [...prev, gettedJson])
+                        initFilms()
                         setNew_film(initialFilm)
                         successSmth(SUCCESS_ADDED)
                     }

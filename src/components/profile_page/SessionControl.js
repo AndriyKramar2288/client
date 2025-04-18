@@ -27,10 +27,10 @@ function SessionList({ sessions, setSessions }) {
                 setSessions(prev => prev.filter(s => s.id !== id));
                 successSmth(SUCCESS_DELETE_SESSION_MESSAGE)
             } else {
-                throw new Error(FAILED_DELETE_MESSAGE);
+                throw new Error(await res.text());
             }
         } catch (err) {
-            alertSmth(err.message)
+            alertSmth(JSON.parse(err.message).message ?? FAILED_DELETE_MESSAGE)
         }
     }
 
