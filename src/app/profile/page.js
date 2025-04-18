@@ -17,25 +17,57 @@ const MY_BOOKING = "Мої бронювання"
 const EMPTY_BOOKINGS = "Недавні бронювання відсутні!"
 const ADMIN_PANEL = "Адмін-панель"
 
-function BookingList({ bookings }) {
-    return (
-        <div>
-            {bookings && bookings.length ? (
-                <ul>
-                    {bookings.map((booking, key) => (
-                        <li key={key}>
-                            {booking.viewSession.film.en_name}
-                        </li>
-                    ))}
-                </ul>
-            ) : (
-                <h1 className="text-lg font-bold">
-                    {EMPTY_BOOKINGS}
-                </h1>
-            )}
+function BookingList({ sessionInfos }) {
+return (
+    <div className="p-4 space-y-8">
+        {sessionInfos && sessionInfos.length > 0 ? (sessionInfos.map((session) => (
+        <div
+            key={session.id}
+            className="bg-[#2d2d2d71] rounded-md shadow-md p-6 border-gray-200"
+        >
+            <h2 className="text-2xl font-bold mb-2">{session.film.uk_name} ({session.film.release_year})</h2>
+            <p className="text-gray-100 mb-4">
+            🎬 {session.film.director} • 📅 {new Date(session.date).toLocaleString()} • 🎞 {session.format} • 💺 {session.hall_data.name} • 💵 {session.price_per_sit} грн/місце
+            </p>
+
+            <div className="overflow-x-auto">
+            <table className="min-w-full table-auto border-gray-700 text-sm">
+                <thead className="bg-gray-600">
+                <tr>
+                    <th className="px-4 py-2 border border-gray-700">#</th>
+                    <th className="px-4 py-2 border border-gray-700">Місце</th>
+                    <th className="px-4 py-2 border border-gray-700">Час бронювання</th>
+                    <th className="px-4 py-2 border border-gray-700">Глядач</th>
+                    <th className="px-4 py-2 border border-gray-700">Контакти</th>
+                </tr>
+                </thead>
+                <tbody className="bg-gray-500">
+                {session.bookings.map((booking, i) => (
+                    <tr key={booking.id} className="hover:bg-gray-800 duration-200">
+                    <td className="px-4 py-2 border border-gray-700 text-center">{i + 1}</td>
+                    <td className="px-4 py-2 border border-gray-700 text-center">{booking.sit}</td>
+                    <td className="px-4 py-2 border border-gray-700">{new Date(booking.bookingTime).toLocaleString()}</td>
+                    <td className="px-4 py-2 border border-gray-700">
+                        <div className="font-semibold">{booking.cinemaViewer.fullName}</div>
+                        <div className="text-sm text-gray-500">{booking.cinemaViewer.email}</div>
+                    </td>
+                    <td className="px-4 py-2 border border-gray-700">
+                        📞 {booking.cinemaViewer.phoneNumber}
+                    </td>
+                    </tr>
+                ))}
+                </tbody>
+            </table>
+            </div>
         </div>
-    )
-}
+        ))) : (
+            <h1 className="text-lg font-bold">
+                {EMPTY_BOOKINGS}
+            </h1>
+        )}
+    </div>
+    );
+};
 
 function SmallUser({ user }) {
     return (
@@ -62,20 +94,24 @@ function LeftButton({ text, clickHandler, active }) {
 export default function LoginPage() {
     const router = useRouter()
     const [user, setUser] = useMainContext()
-    const [bookings, setBookings] = useState()
+    const [sessionInfos, setSessionInfos] = useState()
 
     const [selectedCategory, setSelectedCategory] = useState(1)
 
+    useEffect(() => {
+        console.log(sessionInfos)
+    }, [sessionInfos])
+
     async function initBookings() {
         try {
-            const result = await fetch(`${BACKEND_API_URL}/users/booking/`, {
+            const result = await fetch(`${BACKEND_API_URL}/users/session/`, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem(TOKEN_LOCAL_STORAGE)}`
                 }
             })
             if (result.ok) {
                 const data = await result.json()
-                setBookings(data)
+                setSessionInfos(data)
             }
             else {
                 throw new Error("LOL")
@@ -95,10 +131,6 @@ export default function LoginPage() {
 
         initBookings()
     }, [])
-
-    useEffect(() => {
-        console.log(user)
-    }, [user])
 
     return (
         <div className="bg-cover bg-fixed" style={{ backgroundImage: `url(${BG_URL})`, fontFamily: "var(--font-pt-mono)" }}>
@@ -134,7 +166,7 @@ export default function LoginPage() {
                                 exit={{ opacity: 0, y: 15 }}
                                 transition={{ duration: 0.1, ease: "easeIn" }}
                                 key={selectedCategory}>
-                                {selectedCategory === 1 && <BookingList bookings={bookings} />}
+                                {selectedCategory === 1 && <BookingList sessionInfos={sessionInfos} />}
                                 {selectedCategory === 99 && <AdminPanel />}
                             </motion.div>
                         </AnimatePresence>

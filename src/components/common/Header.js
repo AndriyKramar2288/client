@@ -52,7 +52,10 @@ export default function Header({ headText }) {
         try {
             const api_response = await fetch(`${BACKEND_API_URL}/auth/google_id_token`, {
                 method: "POST",
-                body: `${credentialResponse.credential}`
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ token: `${credentialResponse.credential}` })
             })
             if (api_response.ok) {
                 const data = await api_response.json()

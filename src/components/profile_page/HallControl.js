@@ -10,6 +10,7 @@ const BAD_DELETE = "Не вдалося видалити залу :("
 
 export default function HallControl({ currentHalls, setCurrentHalls }) {
     const [newHallName, setNewHallName] = useState("");
+    const [newHallSize, setNewHallSize] = useState("");
     const [loading, setLoading] = useState(false);
 
     const token = localStorage.getItem(TOKEN_LOCAL_STORAGE);
@@ -19,13 +20,13 @@ export default function HallControl({ currentHalls, setCurrentHalls }) {
 
         try {
             setLoading(true);
-            const response = await fetch(`${BACKEND_API_URL}/films/hall/`, {
+            const response = await fetch(`${BACKEND_API_URL}/hall/`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                     "Authorization": `Bearer ${token}`
                 },
-                body: JSON.stringify({ name: newHallName })
+                body: JSON.stringify({ name: newHallName, size: newHallSize })
             });
 
             if (!response.ok) {
@@ -46,7 +47,7 @@ export default function HallControl({ currentHalls, setCurrentHalls }) {
 
     async function deleteHall(id) {
         try {
-            const response = await fetch(`${BACKEND_API_URL}/films/hall/${id}`, {
+            const response = await fetch(`${BACKEND_API_URL}/hall/${id}`, {
                 method: "DELETE",
                 headers: {
                     "Authorization": `Bearer ${token}`
@@ -75,6 +76,14 @@ export default function HallControl({ currentHalls, setCurrentHalls }) {
                     placeholder="Введіть назву зали"
                     className="w-full p-2 rounded text-orange-200 outline-none"
                 />
+                <input
+                    min={3}
+                    type="number"
+                    value={newHallSize}
+                    onChange={e => setNewHallSize(e.target.value)}
+                    placeholder="Введіть к-ть місць"
+                    className="w-full p-2 rounded text-orange-200 outline-none"
+                />
                 <button
                     onClick={createHall}
                     disabled={loading}
@@ -92,7 +101,10 @@ export default function HallControl({ currentHalls, setCurrentHalls }) {
                     key={hall.id}
                     className="bg-[#231f3d94] p-3 rounded flex justify-between items-center"
                 >
-                    <span>{hall.name}</span>
+                    <div className="flex">
+                        <span className="xl:mr-3">{hall.name}</span>
+                        <span>{`| кількість місць: ${hall.size}`}</span>
+                    </div>
                     <button
                         onClick={() => deleteHall(hall.id)}
                         className="text-red-500 hover:text-red-700 transition"

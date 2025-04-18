@@ -7,9 +7,11 @@ import FilmSmallCard from "@/components/booking_page/FilmSmallCard";
 import SessionList from "@/components/booking_page/SessionList";
 import CinemaHall from "@/components/booking_page/CinemaHall";
 import ViewerDataInput from "@/components/booking_page/ViewerDataInput";
+import { useParams, useRouter } from "next/navigation";
+import { alertSmth, BACKEND_API_URL } from "@/components/services/nonComponents";
 
 const BOOKING_A_MOVIE = "Бронювання квитка"
-
+const FILM_DOESNT_HAVE_FREE_SESSIONS = "Бронювання квитків на цей фільм недоступне!"
 const BG_URL = "/images/2025-04-09_20.20.09.png"
 
 const BOOKING_FILM_DATA = {
@@ -121,8 +123,11 @@ function NavigationPanelArrow() {
 }
 
 export default function Home() {
-  const [ bookingFilm, setBookingFilm] = useState(BOOKING_FILM_DATA)
-  const [ movieSessionList, setMovieSessionList ] = useState(BOOKING_SESSIONS)
+  const router = useRouter()
+  const { film_id } = useParams()
+
+  const [ bookingFilm, setBookingFilm] = useState()
+  const [ movieSessionList, setMovieSessionList ] = useState([])
 
   const [ currentLevel, setCurrentLevel ] = useState(1)
 
@@ -139,8 +144,33 @@ export default function Home() {
   }, [choosedSession])
 
   useEffect(() => {
-    console.log(choosedViewerData)
-  }, [choosedViewerData])
+    fetchFilms()
+  }, [])
+
+  async function fetchFilms() {
+      try {
+          const response = await fetch(`${BACKEND_API_URL}/session/available`)
+
+          if (!response.ok) {
+              throw new Error("LOL")
+          }
+
+          const sessions = await response.json()
+
+          const ourSessions = sessions.filter(f => `${f.film.id}` === film_id)
+
+          if (ourSessions.length === 0) {
+            alertSmth(FILM_DOESNT_HAVE_FREE_SESSIONS)
+            router.push("/")
+          }
+
+          setBookingFilm(ourSessions[0].film)
+          setMovieSessionList(ourSessions)
+
+      } catch (err) {
+          alertSmth(err.message)
+      }
+  }
 
   return (
     <div className="bg-center bg-cover bg-fixed" style={{ backgroundImage: `url(${BG_URL})` }}>
@@ -177,7 +207,7 @@ export default function Home() {
             </AnimatePresence>
           </div>
           <div className="lg:flex-1/4 lg:bg-[#251f1979]">
-              <FilmSmallCard film={bookingFilm} /> 
+              {bookingFilm && <FilmSmallCard film={bookingFilm} />}
           </div>
         </motion.main>
       </div>

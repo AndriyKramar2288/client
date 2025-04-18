@@ -88,7 +88,7 @@ export default function MovieCard({ film, card_index, cardDetailsVisible, setCar
                         <h1 className="text-xl mx-3 my-0.5 text-amber-200">{film.release_year}</h1>
                         <div className="flex items-center mx-3">
                             <img src={IMDB_SVG_SRC} className="max-h-5" />
-                            <h1 className="text-xl m-3 text-amber-200">{film.rating.imdb}</h1>
+                            <h1 className="text-xl m-3 text-amber-200">{film.imdb}</h1>
                         </div>
                         <MovieCardButton text={LOOK_FOR_WATCHS_TEXT} clickHandler={() => route.push(`${BOOKING_PATH}/${film.id}`)} />
                     </div>

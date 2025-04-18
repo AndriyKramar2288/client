@@ -88,7 +88,7 @@ export default function AboutUs() {
     }, [])
 
     return (
-        <div className="flex flex-col mt-4 text-amber-100">
+        <div className="flex flex-col text-amber-100">
             <nav className="bg-[#131313f3] flex justify-center">
                 <h1 className="text-2xl hover:bg-gray-900 px-4 duration-700 rounded-md" style={{fontFamily: "var(--font-pt-mono)"}}>{HEAD_TEXT}</h1>
             </nav>

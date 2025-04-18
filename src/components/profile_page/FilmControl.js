@@ -21,7 +21,7 @@ const initialFilm = {
     actors: "",
     duration: "",
     voice_acting: "",
-    rating: "",
+    imdb: "",
     age_limit: "",
     about: "",
 }
@@ -114,11 +114,11 @@ export default function FilmControl({ currentFilms, setCurrentFilms, createSessi
                             "Authorization": `Bearer ${token}`,
                             "Content-Type": "application/json"
                         },
-                        body: JSON.stringify([film_toSave])
+                        body: JSON.stringify(film_toSave)
                     })
                     if (gettedFilms.status === 201) {
                         const gettedJson = await gettedFilms.json()
-                        setCurrentFilms(prev => [...prev, ...gettedJson])
+                        setCurrentFilms(prev => [...prev, gettedJson])
                         setNew_film(initialFilm)
                         successSmth(SUCCESS_ADDED)
                     }

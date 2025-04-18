@@ -1,5 +1,4 @@
 "use state"
-import { useState } from 'react'
 import { emptyListSplitter } from '../services/nonComponents';
 
 const FILM_CREATION = "Додавання фільму"
@@ -41,8 +40,7 @@ export default function AddFilmSection({ film, setFilm, saveFilm }) {
     const handleSubmit = () => {
         const readyFilm = {
             ...film,
-            rating: [{name: "imdb", rate: film.rating}],
-            actors: emptyListSplitter(film.actors, "\n").map(actor => ({fullname: actor})),
+            actors: emptyListSplitter(film.actors, "\n"),
             src_photos: emptyListSplitter(film.src_photos, "\n"),
             genres: emptyListSplitter(film.genres, ", "),
             countries: emptyListSplitter(film.countries, ", ")
@@ -67,7 +65,7 @@ export default function AddFilmSection({ film, setFilm, saveFilm }) {
                 <Field label="Актори (через Enter)" name="actors" textarea rows={4} value={film.actors} onChange={handleChange} />
                 <Field label="Тривалість (хв)" name="duration" type="number" value={film.duration} onChange={handleChange} min={0} />
                 <Field label="Озвучення" name="voice_acting" value={film.voice_acting} onChange={handleChange} />
-                <Field label="Рейтинг IMDb" name="rating" value={film.rating} onChange={handleChange} placeholder="8.3/328 000" />
+                <Field label="Рейтинг IMDb" name="imdb" value={film.imdb} onChange={handleChange} placeholder="8.3/328 000" />
                 <Field label="Вікове обмеження" name="age_limit" value={film.age_limit} onChange={handleChange} placeholder="12+" />
                 <Field label="Про фільм" name="about" textarea rows={6} value={film.about} onChange={handleChange} />
             </div>

@@ -52,7 +52,7 @@ export default function AdminPanel() {
 
     async function fetchHalls() {
         try {
-            const response = await fetch(`${BACKEND_API_URL}/films/hall/`)
+            const response = await fetch(`${BACKEND_API_URL}/hall/`)
             const data = await response.json()
             setCurrentHalls(data)
         } catch (err) {

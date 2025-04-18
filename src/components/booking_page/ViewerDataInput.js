@@ -1,8 +1,9 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { alertSmth, formatUkrainianDate, isValidEmail, isValidPhoneNumber, successSmth } from "../services/nonComponents"
+import { alertSmth, BACKEND_API_URL, formatUkrainianDate, isValidEmail, isValidPhoneNumber, successSmth } from "../services/nonComponents"
 import { useRouter } from "next/navigation"
+import { useMainContext } from "../contexts/MainContext"
 
 const PUT_YOUR_DATA = "Введіть дані"
 const SIT_NUMBER = "Місце"
@@ -12,11 +13,11 @@ const FIELD_LIST = [
         "text": "електронна скринька"
     }, 
     {
-        "namek": "phone_number",
+        "namek": "phoneNumber",
         "text": "номер телефону"
     }, 
     {
-        "namek": "full_name",
+        "namek": "fullName",
         "text": "повне ім'я"
     }
 ]
@@ -32,7 +33,7 @@ const TOO_SHORT_FIELD_MESSAGE = "Одне зі вказаних значень �
 const BAD_EMAIL_MESSAGE = "Одна з вказаних електронних скриньок хибна!"
 const BAD_PHONE_NUMBER_MESSAGE = "Один з вказаних номерів телефонів хибний!"
 const GOOD_BOOKING_MESSAGE = "Ваші місця успішно заброньовано!"
-
+const BOOKING_FAILURE = "Бронювання не вдалося!"
 
 function InputField({ field, choosedViewerData, setChoosedViewerData, sit }) {
     const [ text, setText ] = useState(choosedViewerData[sit] ? choosedViewerData[sit][field["namek"]] : "")
@@ -73,12 +74,47 @@ function checkEmail(data) {
 }
 
 function checkPhoneNumber(data) {
-    return Object.entries(data).every(([key, value]) => isValidPhoneNumber(value["phone_number"]) )
+    return Object.entries(data).every(([key, value]) => isValidPhoneNumber(value["phoneNumber"]) )
 }
 
 export default function ViewerDataInput({ choosedViewerData, setChoosedViewerData, choosedSits, currentSession }) {
 
     const router = useRouter()
+    const [user, setUser] = useMainContext()
+
+    async function sendBooking(clearViewerData) {
+        const bookings = Object.entries(clearViewerData).map(([key, value], index) => {
+            const booking = {
+                sit: key,
+                cinemaViewer: value,
+                session_id: currentSession.id
+            }
+
+            return user ? {...booking, user_id: user.id} : booking
+        })
+
+        try {
+            const response = await fetch(`${BACKEND_API_URL}/booking/`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(bookings)
+            })
+
+            if (response.status !== 201) {
+                const text = await response.text()
+                throw new Error(text)
+            }
+
+            successSmth(GOOD_BOOKING_MESSAGE)
+            router.push("/")
+
+        } catch (err) {
+            alertSmth(JSON.parse(err.message)?.message ?? BOOKING_FAILURE)
+        }
+
+    }
 
     function confirmBookButtonHandler() {
         const clearViewerData = Object.fromEntries(
@@ -100,8 +136,8 @@ export default function ViewerDataInput({ choosedViewerData, setChoosedViewerDat
             return
         }
 
-        successSmth(GOOD_BOOKING_MESSAGE)
-        router.push("/")
+        console.log(clearViewerData)
+        sendBooking(clearViewerData)
     }
 
     return (
@@ -123,7 +159,7 @@ export default function ViewerDataInput({ choosedViewerData, setChoosedViewerDat
                     <li className="flex items-center">
                         <i className="fa-solid fa-house"></i>
                         <span className="mx-2">{HALL.toUpperCase()}:</span>
-                        <span className="font-bold">{currentSession.hall_data.hall_name}</span>
+                        <span className="font-bold">{currentSession.hall_data.name}</span>
                     </li>
                 </ul>
                 <ConfirmButton text={TO_BOOK.toUpperCase()} clickHandler={() => confirmBookButtonHandler()} />

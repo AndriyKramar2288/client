@@ -12,12 +12,13 @@ const BAD_CREATING_SESSION = "Не вдалося створити сеанс!"
 const SUCCESS_DELETE_SESSION_MESSAGE = "Сеанс був успішно видалений!"
 const SUCCESS_CREATE_SESSION = "Сеанс був успішно створений!"
 
-const token = localStorage.getItem(TOKEN_LOCAL_STORAGE);
-
 function SessionList({ sessions, setSessions }) {
+
+    const token = localStorage.getItem(TOKEN_LOCAL_STORAGE);
+
     async function deleteSession(id) {
         try {
-            const res = await fetch(`${BACKEND_API_URL}/films/session/${id}`, {
+            const res = await fetch(`${BACKEND_API_URL}/session/${id}`, {
                 method: "DELETE",
                 headers: { "Authorization": `Bearer ${token}` }
             });
@@ -115,6 +116,9 @@ function AddSessionSection({ newSession, setNewSession, currentHalls, createSess
 }
 
 export default function SessionControl({ creationSessionFilm, currentHalls }) {
+
+    const token = localStorage.getItem(TOKEN_LOCAL_STORAGE);
+
     const [sessions, setSessions] = useState([]);
     const [newSession, setNewSession] = useState({
         date: "",
@@ -131,7 +135,7 @@ export default function SessionControl({ creationSessionFilm, currentHalls }) {
 
     async function fetchSessions() {
         try {
-            const response = await fetch(`${BACKEND_API_URL}/films/session/${creationSessionFilm.id}`);
+            const response = await fetch(`${BACKEND_API_URL}/session/${creationSessionFilm.id}`);
             const data = await response.json();
             setSessions(data);
         } catch (err) {
@@ -148,7 +152,7 @@ export default function SessionControl({ creationSessionFilm, currentHalls }) {
                 hall_id: parseInt(newSession.hall_id)
             };
 
-            const res = await fetch(`${BACKEND_API_URL}/films/session/`, {
+            const res = await fetch(`${BACKEND_API_URL}/session/`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -180,6 +184,7 @@ export default function SessionControl({ creationSessionFilm, currentHalls }) {
 
     return (
         <section className="flex flex-col items-center p-8 rounded-md text-white">
+            <h2 className="mb-8 text-xl font-bold text-amber-100">{SESSIONS_FOR_FILM}{creationSessionFilm.uk_name}</h2>
             <AddSessionSection newSession={newSession} setNewSession={setNewSession} currentHalls={currentHalls} createSession={createSession} />
             {sessions.length > 0 && <SessionList sessions={sessions} setSessions={setSessions} />}
         </section>

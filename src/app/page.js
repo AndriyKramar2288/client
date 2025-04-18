@@ -4,9 +4,12 @@ import Header from "@/components/common/Header";
 import AboutUs from "@/components/main_page/AboutUs";
 import Introduction from "@/components/main_page/Introduction";
 import MovieList from "@/components/main_page/MovieList";
-import { useState } from "react";
+import { alertSmth, BACKEND_API_URL } from "@/components/services/nonComponents";
+import { useEffect, useState } from "react";
 
 const NOW_IN_PROCAT = "Зараз у прокаті"
+const MAIN_PAGE = "Головна сторінка"
+const BAD_FETCH_FILMS_DATA = "Помилка завантаження списку фільмів!"
 
 const FAKE_FILMS_DATA = [
   {
@@ -192,19 +195,38 @@ const FAKE_FILMS_DATA = [
 ]
 
 export default function Home() {
-  const [filmsData, setFilmsData] = useState(FAKE_FILMS_DATA)
+    const [filmsData, setFilmsData] = useState([])
 
+    async function fetchFilmsData() {
+        try {
+            const response = await fetch(`${BACKEND_API_URL}/films/with_sessions`)
 
-  return (
+            if (!response.ok) {
+                message = await response.text()
+                throw new Error(message)
+            }
+
+            const films = await response.json()
+            setFilmsData(films)
+        } catch (err) {
+            alertSmth(JSON.parse(err.message).message ?? BAD_FETCH_FILMS_DATA)
+        }
+    }
+
+    useEffect(() => {
+        fetchFilmsData()
+    }, [])
+
+    return (
     <div className="">
-      <Introduction />
-      <Header headText={NOW_IN_PROCAT} />
-      <main className="bg-[url(/images/2025-04-09_20.25.22.png)] bg-cover bg-center bg-fixed">
-          <div className="backdrop-blur-xs backdrop-grayscale-100">
-              <MovieList list={filmsData} />
-              <AboutUs />
-          </div>
-      </main>
+        <Introduction />
+        <Header headText={filmsData.length ? NOW_IN_PROCAT : MAIN_PAGE} />
+        <main className="bg-[url(/images/2025-04-09_20.25.22.png)] bg-cover bg-center bg-fixed">
+            <div className="backdrop-blur-xs backdrop-grayscale-100">
+                {filmsData.length > 0 && <MovieList list={filmsData} />}
+                <AboutUs />
+            </div>
+        </main>
     </div>
-  );
+    );
 }

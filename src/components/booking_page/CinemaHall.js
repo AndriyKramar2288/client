@@ -129,7 +129,7 @@ export default function CinemaHall({ setChoosedSits, choosedSits, movieSession, 
                     <Sit number={element}
                         key={key}
                         setChoosedSits={setChoosedSits}
-                        available={!movieSession.hall_data.occupiedPlaces.map(e => e.place).includes(element)} 
+                        available={!movieSession.bookings.map(e => e.sit).includes(element)} 
                         choosedSits={choosedSits} />
                 ))}
             </div>
