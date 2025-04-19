@@ -1,11 +1,13 @@
 "use state"
+
+import { motion } from "framer-motion";
 import { useState } from 'react'
 import AddFilmSection from './AddFilmSection';
 import { alertSmth, BACKEND_API_URL, isDev, successSmth, TOKEN_LOCAL_STORAGE } from '../services/nonComponents';
 
+const JUST_ERROR = "Помилка сервера (походу)"
 const SUCCESS_DELETED = "Фільм успішно видалено!"
 const SUCCESS_ADDED = "Фільм успішно додано!"
-const JUST_ERROR = "Помилка сервера (походу)"
 const BAD_REQUEST = "Ви забули вказати деякі дані!"
 const CURRENT_FILMS = "Додані фільми"
 const BAD_CLIENT_DELETE = "Помилка клієнта. Перезавантажте сторінку, будь ласочка... 😭"
@@ -67,16 +69,19 @@ function FilmList ({ currentFilms, setCurrentFilms, createSession }) {
     return (
         <section className='flex flex-col items-center'>
             <h1 className="font-semibold mb-2">{CURRENT_FILMS.toUpperCase()}</h1>
-            <ul className='flex justify-center sm:justify-start flex-wrap xl:flex-nowrap'>
+            <ul className='flex items-stretch justify-center flex-col md:flex-row md:justify-around flex-wrap'>
                 {currentFilms.map((film, index) => (
-                    <div
+                    <motion.li
+                        initial={{ opacity: 0, x: 10 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 0.1, ease: "easeIn" }}
                         key={index}
-                        className="flex bg-[#855d2586] hover:bg-[#604d3eb9] p-4 m-3 rounded-xl transition-all duration-300">
+                        className="flex flex-1/3 bg-[#855d2586] hover:bg-[#604d3eb9] p-4 m-3 rounded-xl transition-all duration-300">
                             <div className='flex flex-col items-center justify-between mr-3'>
                                 <img
                                 src={film.src_poster}
                                 alt={`${film.uk_name} poster`}
-                                className="w-24 h-36 object-cover rounded-md"
+                                className="max-w-24 max-h-36 mb-4 object-cover rounded-md"
                                 />
                                 <div className='flex'>
                                     <FilmCardButton clickHandler={() => createSession(film)} iconClass={"fa-solid fa-tv"} />
@@ -90,14 +95,14 @@ function FilmList ({ currentFilms, setCurrentFilms, createSession }) {
                                 <p className="text-sm"><span className="font-semibold">Рік:</span> {film.release_year}</p>
                                 <p className="text-sm">
                                     <span className="font-semibold">Країна:</span>
-                                    {film.countries && film.countries.length ? film.countries.join(", ") : '—'}
+                                    {film.countries && film.countries.length ? " " + film.countries.join(", ") : '—'}
                                 </p>
                                 <p className="text-sm">
                                     <span className="font-semibold">Жанри:</span>
-                                    {film.genres && film.genres.length ? film.genres.join(", ") : '—'}
+                                    {film.genres && film.genres.length ? " " + film.genres.join(", ") : '—'}
                                 </p>
                             </div>
-                    </div>
+                    </motion.li>
                 ))}
             </ul>
         </section>
