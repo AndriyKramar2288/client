@@ -18,7 +18,7 @@ function Sides() {
 
 export default function Introduction() {
     return (
-        <div style={{ backgroundImage: `url(${IMAGE_SRC})` }} className="min-h-lvh flex justify-center items-stretch flex-col w-full">
+        <div style={{ backgroundImage: `url(${IMAGE_SRC})` }} className="min-h-lvh bg-cover bg-center flex justify-center items-stretch flex-col w-full">
             <Sides />
             <motion.div
                 initial={{ opacity: 1, minHeight: "0lvh" }}

@@ -36,7 +36,7 @@ function HeaderButton({ iconClass, text, clickHandler }) {
 
 function HeaderSign({ text }) {
     return (
-        <div className="flex justify-center items-center text-2xl bg-amber-600 p-4 mx-3.5 hover:bg-orange-600 rounded-xl duration-700 font-(family-name:--font-pt-mono) text-amber-200">
+        <div className="flex justify-center items-center text-center text-2xl bg-amber-600 p-4 mx-3.5 hover:bg-orange-600 rounded-xl duration-700 font-(family-name:--font-pt-mono) text-amber-200">
             {text}
         </div>
     )

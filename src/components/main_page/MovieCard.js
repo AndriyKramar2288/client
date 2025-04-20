@@ -43,8 +43,20 @@ export default function MovieCard({ film, card_index, cardDetailsVisible, setCar
     }, [init])
 
     function isScreenXL() {
-        return (window.innerWidth >= 1280)
+        return (screenWidth >= 1280)
     }
+
+    function isScreenLG() {
+        return (screenWidth <= 1024)
+    }
+
+    const [screenWidth, setScreenWidth] = useState(1920)
+    useEffect(() => {
+        const handleResize = () => setScreenWidth(window.innerWidth);
+        handleResize();
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
 
     useEffect(() => {
         setExtanded(cardDetailsVisible === card_index)
@@ -64,10 +76,10 @@ export default function MovieCard({ film, card_index, cardDetailsVisible, setCar
         <AnimatePresence mode="wait">
         {visible && (
             <motion.div 
-                initial={{ opacity: 0, width: init ? "50%" : 0 }}
-                animate={{ opacity: 1, width: (extanded ? "100%" : "50%"), transition: { duration: init ? 0.25 : 0.7 } }}
+                initial={{ opacity: 0, width: init ? (isScreenLG() ? "100%" : "50%") : 0 }}
+                animate={{ opacity: 1, width: (extanded ? "100%" : (isScreenLG() ? "100%" : "50%")), transition: { duration: init ? 0.25 : 0.7 } }}
                 exit={{ opacity: 0, width: 0, transition: { duration: 0.7 } }}
-                className="flex text-amber-100 my-4 overflow-hidden items-center lg:items-start flex-col lg:flex-row xl:mx-0 mx-4"
+                className="flex text-amber-100 my-4 overflow-hidden items-center md:items-start flex-col lg:flex-row xl:mx-0 mx-4"
                 key={card_index}>
                 <div className="flex flex-col md:flex-row my-3 lg:my-0 items-center md:items-start">
                     <div onClick={(e) => toggleExtanded()} className="xl:bg-[#585858d3] lg:bg-none bg-[#232323d3] not-xl:rounded-sm xl:rounded-tl-2xl flex justify-center items-center cursor-pointer duration-300 hover:bg-amber-700">
@@ -76,7 +88,7 @@ export default function MovieCard({ film, card_index, cardDetailsVisible, setCar
                             animate={{ opacity: 1, transition: { duration: 0.5, delay: 0.15 } }}
                             exit={{ opacity: 0, transition: { duration: 0.5 } }}
                             key={film.src_poster}
-                            src={film.src_poster} alt="poster" className="xl:shadow-xl shadow-black max-h-[70lvh] rounded-md m-2.5 contain-content" />
+                            src={film.src_poster} alt="poster" className="xl:shadow-xl shadow-md shadow-black max-h-[70lvh] rounded-md m-2.5 contain-content" />
                     </div>
                     <div style={{ fontFamily: "var(--font-cormorant)" }} className="my-3 lg:my-0 flex flex-col items-center sm:items-start bg-[#38383862] not-xl:rounded-2xl xl:rounded-br-2xl">
                         <h1 className="m-3 text-3xl">{film.uk_name}</h1>
