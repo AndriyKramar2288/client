@@ -6,11 +6,11 @@ import BookingList from "./BookingList"
 
 const INTERNET_ERROR = "Помилка!"
 
-export default function WorkerPanel() {
+export default function WorkerPanel({ initBookings }) {
 
     const [sessionAvailableInfos, setSessionAvailableInfos] = useState()
 
-    async function initBookings() {
+    async function initWorkerBookings() {
         try {
             const result = await fetch(`${BACKEND_API_URL}/session/available_worker`, {
                 headers: {
@@ -31,7 +31,7 @@ export default function WorkerPanel() {
     }
 
     useEffect(() => {
-        initBookings()
+        initWorkerBookings()
     }, [])
 
     useEffect(() => {
@@ -40,7 +40,7 @@ export default function WorkerPanel() {
 
     return (
         <div>
-            <BookingList full sessionInfos={sessionAvailableInfos} setSessionInfos={setSessionAvailableInfos} />
+            <BookingList full sessionInfos={sessionAvailableInfos} setSessionInfos={setSessionAvailableInfos} initBookings={initBookings} />
         </div>
     )
 }

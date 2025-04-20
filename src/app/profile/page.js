@@ -124,7 +124,7 @@ export default function LoginPage() {
                                 transition={{ duration: 0.1, ease: "easeIn" }}
                                 key={selectedCategory}>
                                 {selectedCategory === 1 && <BookingList sessionInfos={sessionInfos} />}
-                                {selectedCategory === 98 && <WorkerPanel />}
+                                {selectedCategory === 98 && <WorkerPanel initBookings={initBookings} />}
                                 {selectedCategory === 99 && <AdminPanel />}
                             </motion.div>
                         </AnimatePresence>

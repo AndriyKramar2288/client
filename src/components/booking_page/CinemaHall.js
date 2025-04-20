@@ -93,7 +93,7 @@ export default function CinemaHall({ setChoosedSits, choosedSits, movieSession, 
                 <ul className="mb-5">
                     <AnimatedListItem first={CHOOSED_SITS_COUNT} last={choosedSits.length} />
                     <AnimatedListItem first={CURRENT_PRICE} last={`${choosedSits.length * movieSession.price_per_sit}${CURRENCY}`} />
-                    <AnimatedListItem first={HALL_NAME} last={movieSession.hall_data.hall_name} />
+                    <AnimatedListItem first={HALL_NAME} last={movieSession.hall_data.name} />
                 </ul>
                 <AnimatePresence mode="wait">
                     {choosedSits.length > 0 && (

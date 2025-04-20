@@ -23,10 +23,10 @@ function HeaderButton({ iconClass, text, clickHandler }) {
     return (
         <div className="group flex items-center">
             <HeaderButtonDecoration />
-            <button className="text-2xl bg-amber-700 p-4 cursor-pointer mx-3.5 group-hover:mx-0 hover:bg-amber-800 duration-300 font-(family-name:--font-pt-mono) text-amber-200"
+            <button className="flex flex-col sm:flex-row items-center text-2xl bg-amber-700 p-4 cursor-pointer mx-3.5 group-hover:mx-0 hover:bg-amber-800 duration-300 font-(family-name:--font-pt-mono) text-amber-200"
                     onClick={clickHandler}
             >
-                <i className={`${iconClass} mr-3`}></i>
+                <i className={`${iconClass} sm:mr-3`}></i>
                 {text}
             </button>
             <HeaderButtonDecoration />
@@ -36,9 +36,9 @@ function HeaderButton({ iconClass, text, clickHandler }) {
 
 function HeaderSign({ text }) {
     return (
-        <h1 className="text-2xl bg-amber-600 p-4 mx-3.5 group-hover:mx-0 hover:bg-orange-600 rounded-xl duration-700 font-(family-name:--font-pt-mono) text-amber-200">
+        <div className="flex justify-center items-center text-2xl bg-amber-600 p-4 mx-3.5 hover:bg-orange-600 rounded-xl duration-700 font-(family-name:--font-pt-mono) text-amber-200">
             {text}
-        </h1>
+        </div>
     )
 }
 
