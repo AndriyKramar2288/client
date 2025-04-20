@@ -1,6 +1,6 @@
 import { toast } from "react-toastify";
 
-export const BACKEND_API_URL = "http://localhost:8080/api"
+export const BACKEND_API_URL = process.env.API_URL ?? "http://localhost:8080/api"
 export const GOOGLE_CLIENT_ID = "687579243762-scb4sm0ddqfo9qpl6g17dra648g5jipu.apps.googleusercontent.com"
 export const TOKEN_LOCAL_STORAGE = "access_token"
 
@@ -75,5 +75,5 @@ export function logout(setUsr, router) {
 }
 
 export function isDev() {
-    return (process.env.NODE_ENV === 'development')
+    return (process.env.NODE_ENV !== 'production')
 }
