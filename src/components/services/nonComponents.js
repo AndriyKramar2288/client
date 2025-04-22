@@ -64,6 +64,23 @@ export function successSmth(message) {
     })
 }
 
+export function waitSmth(promise, waitMessage, successMessage) {
+    toast.promise(
+        promise,
+        {
+            pending: waitMessage,
+            success: successMessage,
+        },
+        {
+            style: {
+                background: "#000000",
+                color: "#cd812f",
+                fontFamily: "var(--font-pt-mono)"
+            }
+        }
+    )
+}
+
 export function emptyListSplitter(string, splitter) {
     return string.trim() ? string.split(splitter) : []
 }

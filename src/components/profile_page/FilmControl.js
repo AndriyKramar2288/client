@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import { useEffect, useState } from 'react'
 import AddFilmSection from './AddFilmSection';
-import { alertSmth, BACKEND_API_URL, isDev, successSmth, TOKEN_LOCAL_STORAGE } from '../services/nonComponents';
+import { alertSmth, BACKEND_API_URL, isDev, successSmth, TOKEN_LOCAL_STORAGE, waitSmth } from '../services/nonComponents';
 
 const JUST_ERROR = "Помилка сервера (походу)"
 const SUCCESS_DELETED = "Фільм успішно видалено!"
@@ -145,19 +145,19 @@ function ParseFilmsSection({ setFilm }) {
         const token = localStorage.getItem(TOKEN_LOCAL_STORAGE)
         if (token) {
             try {
-                alertSmth(WAIT_PLEASE)
                 const url = new URL(`${BACKEND_API_URL}/films/uakino`)
                 url.searchParams.append("request", searchRequest)
                 setSearchRequest("")
                 setInputBlock(true)
-                const gettedFilms = await fetch(url, {
+                const gettedFilmsPromise = fetch(url, {
                     headers: {
                         "Authorization": `Bearer ${token}`,
                     },
                 })
+                waitSmth(gettedFilmsPromise, WAIT_PLEASE, SUCCESS_PARSE)
+                const gettedFilms = await gettedFilmsPromise
                 setInputBlock(false)
                 if (gettedFilms.status === 200) {
-                    successSmth(SUCCESS_PARSE)
                     setFoundedFilms(await gettedFilms.json())
                 }
                 else {
@@ -165,7 +165,9 @@ function ParseFilmsSection({ setFilm }) {
                 }
             }
             catch (error) {
-                alertSmth(`${JSON.parse(error.message).message ?? JUST_ERROR}`)
+                if (error.message) {
+                    alertSmth(JSON.parse(error.message).message)
+                }
             }
         }
     }
