@@ -162,6 +162,7 @@ export default function Home() {
           if (ourSessions.length === 0) {
             alertSmth(FILM_DOESNT_HAVE_FREE_SESSIONS)
             router.push("/")
+            return
           }
 
           setBookingFilm(ourSessions[0].film)
