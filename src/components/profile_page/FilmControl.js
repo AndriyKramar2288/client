@@ -171,12 +171,19 @@ function ParseFilmsSection({ setFilm }) {
     }
 
     function copyFilm(film) {
-        setFilm({
-            ...film,
-            countries: film.countries.join(", "),
-            genres: film.genres.join(", "),
-            actors: film.actors.join("\n"),
-            src_photos: film.src_photos.join("\n")
+        setFilm(prev => {
+            const cleanedFilm = Object.fromEntries(
+                Object.entries(film).filter(([key, value]) => value !== null && value !== undefined)
+            )
+
+            return ({
+                ...initialFilm,
+                ...cleanedFilm,
+                countries: Array.isArray(film.countries) ? film.countries.join(", ") : "",
+                genres: Array.isArray(film.genres) ? film.genres.join(", ") : "",
+                actors: Array.isArray(film.actors) ? film.actors.join("\n") : "",
+                src_photos: Array.isArray(film.src_photos) ? film.src_photos.join("\n") : "",
+            })
         })
     }
 
