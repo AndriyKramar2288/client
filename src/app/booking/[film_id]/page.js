@@ -149,7 +149,7 @@ export default function Home() {
 
   async function fetchFilms() {
       try {
-          const response = await fetch(`${BACKEND_API_URL}/session/available`)
+          const response = await fetch(`${BACKEND_API_URL}/session/available/by_film/${film_id}`)
 
           if (!response.ok) {
               throw new Error("LOL")
@@ -157,16 +157,14 @@ export default function Home() {
 
           const sessions = await response.json()
 
-          const ourSessions = sessions.filter(f => `${f.film.id}` === film_id)
-
-          if (ourSessions.length === 0) {
+          if (sessions.length === 0) {
             alertSmth(FILM_DOESNT_HAVE_FREE_SESSIONS)
             router.push("/")
             return
           }
 
-          setBookingFilm(ourSessions[0].film)
-          setMovieSessionList(ourSessions)
+          setBookingFilm(sessions[0].film)
+          setMovieSessionList(sessions)
 
       } catch (err) {
           alertSmth(err.message)

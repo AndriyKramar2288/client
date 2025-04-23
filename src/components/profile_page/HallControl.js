@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { alertSmth, BACKEND_API_URL, successSmth, TOKEN_LOCAL_STORAGE } from "../services/nonComponents";
 
 const GOOD_CREATE = "Зала була успішно створена!"
@@ -39,7 +39,7 @@ export default function HallControl({ currentHalls, setCurrentHalls }) {
             setNewHallName("")
             successSmth(GOOD_CREATE)
         } catch (err) {
-            alertSmth("Не вдалося створити залу: " + err.message)
+            alertSmth(JSON.parse(err.message).message ?? "Не вдалося створити залу!")
         } finally {
             setLoading(false)
         }
